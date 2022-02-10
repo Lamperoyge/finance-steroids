@@ -272,7 +272,6 @@ export default function Home() {
       </section>
 
       <section className='relative w-full h-auto py-8 overflow-hidden bg-white sm:py-12 md:py-20 lg:py-32'>
-        <div className='absolute inset-0 w-full h-full bg-gradient-to-r from-transparent to-white'></div>
         <div className='relative flex flex-col items-center justify-start h-full mx-auto px-14 max-w-7xl lg:flex-row'>
           <div className='relative z-10 w-full h-full lg:w-1/2 xl:pr-12 2xl:pr-24'>
             <div className='flex flex-col items-start justify-center h-full pt-12 lg:pt-0'>
@@ -304,7 +303,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className='relative z-10 w-full h-full px-10 pb-32 mt-16 lg:w-1/2 md:px-20 lg:px-5 xl:px-0 lg:pb-0 lg:mt-0 group'>
+          <div className='hidden sm:block relative z-10 w-full h-full px-10 pb-32 mt-16 lg:w-1/2 md:px-20 lg:px-5 xl:px-0 lg:pb-0 lg:mt-0 group'>
             <div className='relative flex items-center justify-center w-full h-full'>
               <div className='relative w-full h-auto md:h-full lg:h-auto'>
                 <div className='relative w-full h-auto overflow-hidden transition duration-300 transform shadow-lg rounded-xl group-hover:scale-95'>
