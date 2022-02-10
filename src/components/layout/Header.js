@@ -28,11 +28,8 @@ export default function Header() {
   return (
     <div className='relative z-50 w-full h-24'>
       <div className='container flex items-center justify-center h-full max-w-6xl px-8 mx-auto sm:justify-between xl:px-0'>
-        <Link href='/'>
-          <a
-            href='/'
-            className='relative flex items-center inline-block h-5 h-full font-black leading-none'
-          >
+        <Link href='/' passHref>
+          <a className='relative flex items-center inline-block h-5 h-full font-black leading-none'>
             <span className='ml-3 text-xl text-gray-800'>
               trackem<span className='text-indigo-600'>.</span>
             </span>
