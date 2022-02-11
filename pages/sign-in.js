@@ -52,8 +52,9 @@ function SignUpPage() {
                   </h2>
                 </div>
                 <p className='text-2xl text-gray-700'>
-                  We've created a simple formula to follow in order to gain more
-                  out of your business and your application.
+                  {
+                    "We've created a simple formula to follow in order to gain more out of your business and your application."
+                  }
                 </p>
                 <a
                   href='#_'
@@ -70,18 +71,7 @@ function SignUpPage() {
               <h4 className='w-full text-3xl font-bold text-center py-10'>
                 Sign in
               </h4>
-              {/* <a
-                href='#_'
-                className='inline-block w-full px-5 py-4 mt-3 text-lg font-bold text-center text-gray-900 transition duration-200 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 ease'
-              >
-                Sign up with MetaMask
-              </a>
-              <a
-                href='#_'
-                className='inline-block w-full px-5 py-4 mt-3 text-lg font-bold text-center text-gray-900 transition duration-200 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 ease'
-              >
-                Sign up with WalletConnect
-              </a> */}
+
               <div className='relative w-full mt-10 space-y-8'>
                 <div className='relative'>
                   <Formik

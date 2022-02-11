@@ -70,8 +70,9 @@ function SignUpPage() {
                   </h2>
                 </div>
                 <p className='text-2xl text-gray-700'>
-                  We've created a simple formula to follow in order to gain more
-                  out of your business and your application.
+                  {
+                    " We've created a simple formula to follow in order to gain more out of your business and your application."
+                  }
                 </p>
                 <a
                   href='#_'
