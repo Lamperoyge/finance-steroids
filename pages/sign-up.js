@@ -1,12 +1,8 @@
 import Link from 'next/link';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-import { Fragment } from 'react';
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from 'firebase/auth';
+import { useAuth } from 'context/AuthContext';
+import withAuth from 'hocs/withAuth';
 
 const config = [
   {
@@ -52,10 +48,11 @@ const schema = Yup.object({
     .oneOf([Yup.ref('password'), null], 'Passwords must match'),
 });
 
-export default function SignUpPage() {
+function SignUpPage() {
+  const { signUp } = useAuth();
   const handleAuth = (values) => {
-    const authentication = getAuth();
     console.log(values);
+    signUp(values);
   };
   return (
     <section className='w-full bg-white h-full'>
@@ -116,22 +113,25 @@ export default function SignUpPage() {
                       handleSubmit,
                       errors,
                       touched,
+                      handleBlur,
                     }) => {
                       return (
                         <Form onSubmit={handleSubmit}>
                           {config.map((item, idx) => {
                             return (
-                              <div key={idx}>
+                              <div key={idx} className='py-2'>
                                 <label className='font-medium text-gray-900'>
                                   {item.label}
                                 </label>
                                 <input
                                   {...item}
                                   onChange={handleChange}
+                                  onBlur={handleBlur}
                                   value={values[item.name]}
                                   className='block w-full px-4 py-4 mt-2 text-xl placeholder-gray-400 bg-gray-200 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50'
                                 />
-                                {errors[item.name] && (
+
+                                {errors[item.name] && touched[item.name] && (
                                   <span className='text-lg text-red-400'>
                                     {errors[item.name]}
                                   </span>
@@ -169,3 +169,4 @@ export default function SignUpPage() {
     </section>
   );
 }
+export default withAuth(SignUpPage);
