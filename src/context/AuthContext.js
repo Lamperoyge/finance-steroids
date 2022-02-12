@@ -33,11 +33,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const setNullUser = () => {
+    setUser(null);
+    setIsLoading(false);
+  };
   useEffect(() => {
     const unlisten = auth.onAuthStateChanged((authUser) => {
-      authUser ? fetchUser(authUser) : setUser(null) && setIsLoading(false);
+      authUser ? fetchUser(authUser) : setNullUser();
     });
-    setIsLoading(false);
     return () => {
       unlisten();
     };

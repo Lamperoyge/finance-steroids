@@ -13,7 +13,6 @@ export default function usePremiumStatus(user) {
       };
       checkPremiumStatus();
     }
-    if (!user) setIsLoading(false);
   }, [user]);
 
   return [isLoading, premiumStatus];

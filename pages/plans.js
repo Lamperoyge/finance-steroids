@@ -1,8 +1,8 @@
 import { createCheckoutSession } from '../stripe/createCheckoutSession';
 import withAuth from 'hocs/withAuth';
-import Link from 'next/link';
 import { useState } from 'react';
 import { useAuth } from 'context/AuthContext';
+
 function Plans({ firestoreUser }) {
   const plans = [
     {

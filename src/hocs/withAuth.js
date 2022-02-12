@@ -1,29 +1,45 @@
 import { useAuth } from 'context/AuthContext';
 import { useRouter } from 'next/router';
-import withPaidRoute from 'hocs/withPaidRoute';
 import Spinner from 'components/ui/Spinner';
+import useUserRole from 'hooks/useUserRole';
 
 const whitelistedPages = ['/sign-up', '/sign-in'];
 
 export default function withAuth(Component) {
   function WrappedComponent(props) {
     const { isAuthenticated, user, loading, firestoreUser, logout } = useAuth();
+    const [isRoleLoading, userStatus] = useUserRole(user);
+
     const router = useRouter();
 
-    if (isAuthenticated && whitelistedPages.includes(router.route)) {
-      router.push('/home');
-      return null;
+    const activeLoaders = loading || isRoleLoading;
+
+    if (activeLoaders) {
+      return <Spinner />;
     }
 
-    if (!isAuthenticated && !whitelistedPages.includes(router.route)) {
-      router.push('/sign-in');
+    const isInWhitelist = whitelistedPages.includes(router.route);
+
+    if (isAuthenticated && !activeLoaders && isInWhitelist) {
+      router.replace('/home');
       return null;
     }
-    if (loading) {
-      return <Spinner />;
+    if (!isAuthenticated && !activeLoaders && !isInWhitelist) {
+      router.replace('/sign-in');
+      return null;
+    }
+    if (
+      !userStatus &&
+      !activeLoaders &&
+      isAuthenticated &&
+      router.route !== '/plans'
+    ) {
+      debugger;
+      router.replace('/plans');
+      return null;
     }
 
     return <Component user={user} firestoreUser={firestoreUser} {...props} />;
   }
-  return withPaidRoute(WrappedComponent);
+  return WrappedComponent;
 }
