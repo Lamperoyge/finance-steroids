@@ -1,19 +1,29 @@
 import { useAuth } from 'context/AuthContext';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import withPaidRoute from 'hocs/withPaidRoute';
+import Spinner from 'components/ui/Spinner';
+
+const whitelistedPages = ['/sign-up', '/sign-in'];
 
 export default function withAuth(Component) {
-  return function WrappedComponent(props) {
-    const { isAuthenticated, user, loading } = useAuth();
-    const whitelistedPages = ['/sign-up', '/sign-in'];
+  function WrappedComponent(props) {
+    const { isAuthenticated, user, loading, firestoreUser, logout } = useAuth();
     const router = useRouter();
 
-    useEffect(() => {
-      if (isAuthenticated && whitelistedPages.includes(router.asPath)) {
-        router.push('/home');
-      }
-    }, [user]);
+    if (isAuthenticated && whitelistedPages.includes(router.route)) {
+      router.push('/home');
+      return null;
+    }
 
-    return <Component {...props} />;
-  };
+    if (!isAuthenticated && !whitelistedPages.includes(router.route)) {
+      router.push('/sign-in');
+      return null;
+    }
+    if (loading) {
+      return <Spinner />;
+    }
+
+    return <Component user={user} firestoreUser={firestoreUser} {...props} />;
+  }
+  return withPaidRoute(WrappedComponent);
 }

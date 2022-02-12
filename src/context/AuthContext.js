@@ -12,9 +12,10 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setIsLoading] = useState(false);
+  const [loading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState(null);
   const [firestoreUser, setFirestoreUser] = useState(null);
+
   const fetchUser = async (authUser) => {
     const userUid = authUser.uid;
     setUser(authUser);
@@ -25,16 +26,18 @@ export const AuthProvider = ({ children }) => {
       if (docSnap.exists()) {
         setFirestoreUser(docSnap.data());
       }
+      setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
       setFirestoreUser(null);
     }
   };
 
   useEffect(() => {
     const unlisten = auth.onAuthStateChanged((authUser) => {
-      authUser ? fetchUser(authUser) : setUser(null);
+      authUser ? fetchUser(authUser) : setUser(null) && setIsLoading(false);
     });
+    setIsLoading(false);
     return () => {
       unlisten();
     };
@@ -53,24 +56,29 @@ export const AuthProvider = ({ children }) => {
         email,
         name,
       });
-      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      setErrors(error.message);
+      if (error.code === 'auth/user-not-found') {
+        setErrors("Woops! We couldn't find a user with this email/password");
+      } else {
+        setErrors('Woops! Something went wrong');
+      }
     }
   };
   const login = async (email, password) => {
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      setErrors(errors.message);
+      if (error.code === 'auth/user-not-found') {
+        setErrors("Woops! We couldn't find a user with this email/password");
+      } else {
+        setErrors('Woops! Something went wrong');
+      }
     }
   };
 
-  console.log(user);
   const logout = async () => {
     try {
       signOut(auth);
@@ -87,6 +95,8 @@ export const AuthProvider = ({ children }) => {
         loading,
         signUp,
         firestoreUser,
+        errors,
+        logout,
       }}
     >
       {children}

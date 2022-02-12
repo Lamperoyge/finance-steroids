@@ -2,13 +2,13 @@ import getStripe from './initializeStripe';
 import { db } from 'utils/firebase-config';
 import { collection, addDoc, onSnapshot } from 'firebase/firestore';
 
-export async function createCheckoutSession(uid) {
+export async function createCheckoutSession(uid, price) {
   console.log(uid);
 
   const checkoutSessionRef = await addDoc(
     collection(db, 'users', uid, 'checkout_sessions'),
     {
-      price: 'price_1KS55QLaJUYuY17381reKDqb',
+      price: price,
       success_url: window.location.origin,
       cancel_url: window.location.origin,
     }

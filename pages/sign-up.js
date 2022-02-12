@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { useAuth } from 'context/AuthContext';
 import withAuth from 'hocs/withAuth';
+import { useEffect } from 'react';
 
 const config = [
   {
@@ -49,9 +50,8 @@ const schema = Yup.object({
 });
 
 function SignUpPage() {
-  const { signUp } = useAuth();
+  const { signUp, logout, isAuthenticated } = useAuth();
   const handleAuth = (values) => {
-    console.log(values);
     signUp(values);
   };
   return (

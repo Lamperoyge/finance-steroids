@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { useAuth } from 'context/AuthContext';
 import withAuth from 'hocs/withAuth';
-
+import { useEffect } from 'react';
 const config = [
   {
     label: 'Email',
@@ -33,7 +33,7 @@ const schema = Yup.object({
 });
 
 function SignUpPage() {
-  const { login } = useAuth();
+  const { login, errors, logout, isAuthenticated } = useAuth();
   const handleAuth = (values) => login(values.email, values.password);
 
   return (
@@ -71,7 +71,7 @@ function SignUpPage() {
               <h4 className='w-full text-3xl font-bold text-center py-10'>
                 Sign in
               </h4>
-
+              {!!errors && <span className='text-red-400'>{errors}</span>}
               <div className='relative w-full mt-10 space-y-8'>
                 <div className='relative'>
                   <Formik
