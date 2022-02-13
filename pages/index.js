@@ -8,6 +8,17 @@ const schema = object({
     .email('Please enter a valid email')
     .required('Please enter an email'),
 });
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faChartBar,
+  faRotate,
+  faCoins,
+  faRectangleList,
+  faBell,
+  faFileLines,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
+import Steps from 'components/ui/Steps';
 export default function Home() {
   const [emailErrors, setEmailErrors] = useState('');
   const [emailValue, setEmailValue] = useState('');
@@ -37,14 +48,13 @@ export default function Home() {
               className='z-30 flex flex-col items-center w-full max-w-xl text-center lg:items-start lg:w-1/2 lg:pt-24 lg:text-left'
             >
               <h1 className='relative mb-4 text-3xl font-black leading-tight text-gray-900 lg:pr-16 sm:text-6xl lg:mb-8'>
-                {"Gotta Track 'Em All"}
+                {'Catch the Floordle'}
               </h1>
-              <p className='pr-0 mb-8 text-gray-600 sm:text-lg xl:text-xl lg:pr-20'>
-                Track all your projects and investments in one app.
-                <br />
-                Cryptocurrency, NFTs & Stocks
-                <br />
-                Join the waiting list
+              <p className='leading-10 pr-0 mb-8 sm:text-lg xl:text-xl lg:pr-20'>
+                Track NFT collections price floors, create watchlists, sync your
+                wallets and analyze metrics to gain valuable insights on your
+                NFT portfolio with{' '}
+                <strong style={{ color: '#4f46e5' }}>Floordle.</strong>
               </p>
               {isEmailSent && (
                 <>
@@ -74,7 +84,7 @@ export default function Home() {
                       onClick={handleEmail}
                       className='relative self-start inline-block w-auto px-8 py-4 mx-auto mt-0 font-bold text-white bg-indigo-600 border-t border-gray-200 rounded-md shadow-xl sm:mt-1 fold-bold lg:mx-0'
                     >
-                      Join!
+                      Join the waitlist!
                     </button>
                   </div>
                 </div>
@@ -150,10 +160,10 @@ export default function Home() {
               </div>
             </div>
             <div className='relative z-50 flex flex-col items-end justify-center w-full h-full lg:w-1/2 lg:pl-10'>
-              <div className='container relative left-0 w-full max-w-4xl lg:absolute lg:w-screen'>
+              <div className='container relative left-0 w-full max-w-3xl lg:absolute lg:w-screen'>
                 <img
-                  src='https://cdn.devdojo.com/images/december2020/dashboard-dmm.jpeg'
-                  className='w-full h-auto mt-20 mb-20 ml-0 shadow-2xl rounded-xl lg:mb-0 lg:h-full xl:-ml-12'
+                  src='/test1.svg'
+                  className='w-full h-auto mt-20 mb-20 ml-0 lg:mb-0 lg:h-full xl:-ml-26'
                 />
               </div>
             </div>
@@ -162,13 +172,14 @@ export default function Home() {
       </section>
       <section className='relative leading-7 text-gray-900 bg-white border-solid'>
         <div className='box-border mx-auto border-solid lg:pl-8 max-w-7xl'>
-          <div className='flex flex-col items-center leading-7 text-gray-900 border-0 border-gray-200 lg:flex-row'>
+          <div className='flex flex-col items-center leading-7 text-gray-900 border-0 border-gray-200 lg:flex-row-reverse'>
             <div className='box-border flex flex-col justify-center w-full h-full p-8 text-gray-900 border-solid lg:w-1/2 md:p-16 lg:p-0 lg:pl-10 lg:pr-20'>
-              <h2 className='m-0 text-3xl font-medium leading-tight tracking-tight text-left text-black sm:text-4xl md:text-5xl'>
-                Tracking made simple
+              <h2 className='m-0 text-3xl font-bold leading-tight tracking-tight text-left text-black sm:text-4xl md:text-5xl'>
+                {"Gotta track em' all"}
               </h2>
-              <p className='mt-2 text-xl text-left border-0 border-gray-200 sm:text-2xl'>
-                Building a portfolio has never been easier
+              <p className='hidden mt-4 text-xl text-left border-0 border-gray-200 sm:text-2xl'>
+                Never miss out on a sweet deal again with Floordle! React to the
+                market and get ahead of the curve.
               </p>
               <div className='grid gap-4 mt-8 leading-7 border-0 border-gray-200 sm:mt-10 sm:gap-6 lg:mt-12 lg:gap-8'>
                 <div className='box-border flex items-start text-gray-900 border-solid'>
@@ -192,70 +203,51 @@ export default function Home() {
                   </div>
                   <div className='flex-1 ml-6 leading-7 border-0 border-gray-200'>
                     <h3 className='box-border m-0 text-lg font-semibold leading-tight tracking-tight text-black border-solid sm:text-xl md:text-2xl'>
-                      Cryptocurrencies & NFTs
+                      Insight
                     </h3>
                     <p className='box-border mt-2 text-base leading-normal text-gray-900 border-solid'>
-                      Track your coins. Track ICOs. Always be aware of the floor
-                      price of your favorite NFT collection
+                      Never miss out on a sweet deal again with Floordle! React
+                      to the market and get ahead of the curve.
                     </p>
                   </div>
                 </div>
                 <div className='box-border flex items-start text-gray-900 border-solid'>
                   <div className='flex items-center justify-center w-12 h-12 leading-7 bg-indigo-600 border-0 border-gray-200 rounded-full'>
                     <p className='box-border m-0 text-xl text-white border-solid'>
-                      <svg
-                        className='w-6 h-6'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth='2'
-                          d='M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207'
-                        ></path>
-                      </svg>
+                      <FontAwesomeIcon
+                        className='text-white text-2xl'
+                        // style={{ fontSize: '10vh' }}
+                        icon={faChartBar}
+                      />
                     </p>
                   </div>
                   <div className='flex-1 ml-6 leading-7 border-0 border-gray-200'>
                     <h3 className='box-border m-0 text-lg font-semibold leading-tight tracking-tight text-black border-solid sm:text-xl md:text-2xl'>
-                      Stocks & other financial instruments
+                      Analytics
                     </h3>
                     <p className='box-border mt-2 text-base leading-normal text-gray-900 border-solid'>
-                      Watch your investments across different markets in one
-                      place
+                      Get your NFT portfolio in a glance, know your assets and
+                      how much you’re worth.{' '}
                     </p>
                   </div>
                 </div>
                 <div className='box-border flex items-start text-gray-900 border-solid'>
                   <div className='flex items-center justify-center w-12 h-12 leading-7 bg-indigo-600 border-0 border-gray-200 rounded-full'>
                     <p className='box-border m-0 text-xl text-white border-solid'>
-                      <svg
-                        className='w-6 h-6'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth='2'
-                          d='M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z'
-                        ></path>
-                      </svg>
+                      <FontAwesomeIcon
+                        className='text-white text-2xl'
+                        // style={{ fontSize: '10vh' }}
+                        icon={faRotate}
+                      />
                     </p>
                   </div>
                   <div className='flex-1 ml-6 leading-7 border-0 border-gray-200'>
                     <h3 className='box-border m-0 text-lg font-semibold leading-tight tracking-tight text-black border-solid sm:text-xl md:text-2xl'>
-                      Track your income
+                      Sync
                     </h3>
                     <p className='box-border mt-2 text-base leading-normal text-gray-900 border-solid'>
-                      Add your monthly income. Real estate, business & other
-                      ventures. Fully customizable to your needs
-                      <br /> Say no more to spreadsheets
+                      Connect as many wallets as you want. Manage and track your
+                      NFT collection easier and more efficient
                     </p>
                   </div>
                 </div>
@@ -270,25 +262,77 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <Steps />
 
+      <section className='bg-white'>
+        <div className='flex flex-col items-center justify-center px-5 py-20 mx-auto max-w-7xl md:px-0'>
+          <div className='relative'>
+            <h1
+              className='relative text-5xl font-black text-transparent bg-center bg-cover bg-gradient-to-br from-indigo-400 via-indigo-600 to-indigo-500 lg:text-6xl bg-clip-text'
+              style={{
+                backgroundImage:
+                  "url('https://cdn.devdojo.com/images/february2021/bg-colorful.jpg')",
+              }}
+            >
+              Join now.
+            </h1>
+          </div>
+          <p className='mt-3 text-xl text-gray-500 lg:text-2xl'>
+            Take control of your NFT investments with Floordle.
+          </p>
+          <div className='flex flex-col justify-center w-full mt-5 space-y-3 sm:space-x-3 sm:space-y-0 sm:flex-row lg:mt-8'>
+            {!isEmailSent && (
+              <div className='w-full sm:w-1/2'>
+                <input
+                  className='py-2.5 px-4 mb-4 w-full bg-gray-50 border focus:ring-2 focus:ring-opacity-90 focus:ring-indigo-500 border-gray-300 rounded focus:outline-none'
+                  type='email'
+                  placeholder='Email address'
+                  onChange={(e) => {
+                    setEmailValue(e.target.value);
+                    if (emailErrors) {
+                      setEmailErrors('');
+                    }
+                  }}
+                />
+                <div className='flex flex-col justify-center items-center'>
+                  {emailErrors && (
+                    <span className='text-red-400'>{emailErrors}</span>
+                  )}
+                  <button
+                    onClick={handleEmail}
+                    className='relative self-center inline-block w-auto px-8 py-4 mx-auto mt-0 font-bold text-white bg-indigo-600 border-t border-gray-200 rounded-md shadow-xl sm:mt-1 fold-bold lg:mx-0'
+                  >
+                    Join the waitlist!
+                  </button>
+                </div>
+              </div>
+            )}{' '}
+          </div>
+        </div>
+      </section>
       <section className='relative w-full h-auto py-8 overflow-hidden bg-white sm:py-12 md:py-20 lg:py-32'>
         <div className='relative flex flex-col items-center justify-start h-full mx-auto px-14 max-w-7xl lg:flex-row'>
           <div className='relative z-10 w-full h-full lg:w-1/2 xl:pr-12 2xl:pr-24'>
             <div className='flex flex-col items-start justify-center h-full pt-12 lg:pt-0'>
               <h1 className='max-w-lg mx-auto text-4xl font-bold tracking-tight text-center text-gray-700 lg:mx-0 sm:text-5xl lg:text-6xl lg:text-left'>
                 <span className='text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-indigo-500'>
-                  Multi-Asset Dashboard
+                  NFTs are on fire
                 </span>
                 <br />
               </h1>
-              <h2 className='py-2 text-center text-2xl text-gray-600 font-semibold'>
-                Have all your portfolio in one place
+              <h2 className='py-2 text-center text-xl text-gray-600 font-semibold'>
+                {'Missed out another great deal? No more of that'}
                 <br />
               </h2>
 
               <p className='max-w-md mx-auto mt-4 text-center text-gray-500 lg:mx-0 lg:text-left'>
                 {
-                  "There's no more need to jump between apps and keeping a track on a spreadsheet"
+                  'With Floordle, you can track prices, get portfolio analytics, connect multiple wallets, and create watchlists. '
+                }
+              </p>
+              <p className='max-w-md mx-auto mt-4 text-center text-gray-500 lg:mx-0 lg:text-left'>
+                {
+                  'We empower you with data so you can navigate more easily in this market.'
                 }
               </p>
               <div className='max-w-lg mx-auto lg:mx-0'>
@@ -318,178 +362,108 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       <section className='bg-transparent' id='features'>
         <div className='relative'>
           <div className='relative px-6 py-8 ml-auto mr-auto bg-top bg-cover sm:py-16 max-w-7xl md:px-24 lg:px-16 lg:py-20'>
             <h1 className='py-5 m-0 text-3xl font-medium leading-tight tracking-tight text-left text-black sm:text-4xl md:text-5xl'>
               Features
             </h1>
-            <div className='relative grid gap-6 bg-top bg-cover sm:grid-cols-2 lg:grid-cols-4'>
+            <div className='relative grid gap-6 bg-top bg-cover sm:grid-cols-2 lg:grid-cols-3'>
               <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
                 <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
                   <p className='relative'>
-                    <svg
-                      className='w-5 h-5 text-indigo-500'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path d='M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z'></path>
-                    </svg>
+                    <FontAwesomeIcon
+                      className='text-indigo-600 text-lg'
+                      // style={{ fontSize: '10vh' }}
+                      icon={faCoins}
+                    />
                   </p>
                 </div>
-                <p className='font-bold text-gray-700'>Cryptocurrencies</p>
+                <p className='font-bold text-gray-700'>Price Floor</p>
                 <p className='text-sm leading-5 text-gray-500'>
-                  Track your cryptocurrency investments. <br />
+                  Get the price floor data on your collections & watchlists.{' '}
+                  <br />
                 </p>
               </div>
               <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
                 <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
                   <p className='relative'>
-                    <svg
-                      className='w-5 h-5 text-indigo-500'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z'
-                        clipRule='evenodd'
-                      ></path>
-                      <path d='M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z'></path>
-                    </svg>
-                  </p>
-                </div>
-                <p className='font-bold text-gray-700'>ICOs</p>
-                <p className='text-sm leading-5 text-gray-500'>
-                  {"Add all the projects you're interested in"}
-                </p>
-              </div>
-              <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
-                <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
-                  <p className='relative'>
-                    <svg
-                      className='w-5 h-5 text-indigo-500'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z'
-                        clipRule='evenodd'
-                      ></path>
-                    </svg>
-                  </p>
-                </div>
-                <p className='font-bold text-gray-700'>NFTs</p>
-                <p className='text-sm leading-5 text-gray-500'>
-                  Keep a track on the floor price of your favorite projects
-                </p>
-              </div>
-              <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
-                <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
-                  <p className='relative'>
-                    <svg
-                      className='w-5 h-5 text-indigo-500'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path d='M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z'></path>
-                    </svg>
-                  </p>
-                </div>
-                <p className='font-bold text-gray-700'>
-                  Stocks & financial instruments
-                </p>
-                <p className='text-sm leading-5 text-gray-500'>
-                  Track your stock market investments across multiple markets
-                </p>
-              </div>
-              <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
-                <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
-                  <p className='relative'>
-                    <svg
-                      className='w-5 h-5 text-indigo-500'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2H5zm9 4a1 1 0 10-2 0v6a1 1 0 102 0V7zm-3 2a1 1 0 10-2 0v4a1 1 0 102 0V9zm-3 3a1 1 0 10-2 0v1a1 1 0 102 0v-1z'
-                        clipRule='evenodd'
-                      ></path>
-                    </svg>
+                    <FontAwesomeIcon
+                      className='text-indigo-600 text-lg'
+                      // style={{ fontSize: '10vh' }}
+                      icon={faChartBar}
+                    />
                   </p>
                 </div>
                 <p className='font-bold text-gray-700'>Analytics</p>
                 <p className='text-sm leading-5 text-gray-500'>
-                  Analytics to help you better understand your money
-                </p>
-              </div>
-              <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
-                <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
-                  <p className='relative'>
-                    <svg
-                      className='w-5 h-5 text-indigo-500'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        fillRule='evenodd'
-                        d='M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z'
-                        clipRule='evenodd'
-                      ></path>
-                    </svg>
-                  </p>
-                </div>
-                <p className='font-bold text-gray-700'>
-                  Business, real estate & other incomes
-                </p>
-                <p className='text-sm leading-5 text-gray-500'>
-                  You can add any type of income and keep a track of it
-                </p>
-              </div>
-              <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
-                <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
-                  <p className='relative'>
-                    <svg
-                      className='w-5 h-5 text-indigo-500'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path d='M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z'></path>
-                    </svg>
-                  </p>
-                </div>
-                <p className='font-bold text-gray-700'>Dashboard</p>
-                <p className='text-sm leading-5 text-gray-500'>
                   {
-                    "Multi-asset dashboard so you can always find where you're making money and where not"
+                    'Get valuable insights on your portfolio so you can always buy low and sell high.'
                   }
                 </p>
               </div>
               <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
                 <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
                   <p className='relative'>
-                    <svg
-                      className='w-5 h-5 text-indigo-500'
-                      fill='currentColor'
-                      viewBox='0 0 20 20'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path d='M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z'></path>
-                    </svg>
+                    <FontAwesomeIcon
+                      className='text-indigo-600 text-lg'
+                      // style={{ fontSize: '10vh' }}
+                      icon={faRotate}
+                    />
                   </p>
                 </div>
-                <p className='font-bold text-gray-700'>Integrations - BETA</p>
+                <p className='font-bold text-gray-700'>Sync between wallets</p>
                 <p className='text-sm leading-5 text-gray-500'>
-                  {"We're integrating with various APIs"}
+                  {
+                    'Keep your NFTs in multiple wallets and sync the data between them. All in a completely safe environment.'
+                  }
+                </p>
+              </div>
+              <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
+                <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
+                  <p className='relative'>
+                    <FontAwesomeIcon
+                      className='text-indigo-600 text-lg'
+                      // style={{ fontSize: '10vh' }}
+                      icon={faRectangleList}
+                    />
+                  </p>
+                </div>
+                <p className='font-bold text-gray-700'>Watchlists</p>
+                <p className='text-sm leading-5 text-gray-500'>
+                  Create watchlists and never miss out an opportunity.
+                </p>
+              </div>
+              <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
+                <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
+                  <p className='relative'>
+                    <FontAwesomeIcon
+                      className='text-indigo-600 text-lg'
+                      // style={{ fontSize: '10vh' }}
+                      icon={faBell}
+                    />
+                  </p>
+                </div>
+                <p className='font-bold text-gray-700'>Alerts</p>
+                <p className='text-sm leading-5 text-gray-500'>
+                  Get notified about market events and stay ahead of the curve.
+                </p>
+              </div>
+
+              <div className='flex flex-col items-start justify-between p-6 space-y-4 overflow-hidden transition-shadow duration-200 bg-white bg-top bg-cover border border-gray-100 shadow-xl rounded-2xl group hover:shadow-2xl'>
+                <div className='flex items-center justify-center w-10 h-10 text-center bg-top bg-cover rounded-full bg-indigo-50'>
+                  <p className='relative'>
+                    <FontAwesomeIcon
+                      className='text-indigo-600 text-lg'
+                      // style={{ fontSize: '10vh' }}
+                      icon={faFileLines}
+                    />
+                  </p>
+                </div>
+                <p className='font-bold text-gray-700'>Summary</p>
+                <p className='text-sm leading-5 text-gray-500'>
+                  {'Weekly summary on your portfolio.'}
                 </p>
               </div>
             </div>
@@ -504,16 +478,16 @@ export default function Home() {
         <div className='box-border px-4 mx-auto border-solid sm:px-6 md:px-6 lg:px-8 max-w-7xl'>
           <div className='flex flex-col items-center leading-7 text-center text-gray-900 border-0 border-gray-200'>
             <h2 className='box-border m-0 text-3xl font-semibold leading-tight tracking-tight text-black border-solid sm:text-4xl md:text-5xl'>
-              Simple, Transparent Pricing
+              Pricing
             </h2>
             <p className='box-border mt-2 text-xl text-gray-900 border-solid sm:text-2xl'>
-              Pricing to fit the needs of any companie size.
+              Pricing to fit your needs.
             </p>
           </div>
           <div className='grid grid-cols-1 gap-4 mt-4 leading-7 text-gray-900 border-0 border-gray-200 sm:mt-6 sm:gap-4 md:mt-8 md:gap-0 lg:grid-cols-2'>
             <div className='relative z-20 flex flex-col items-center max-w-md p-4 mx-auto my-0 bg-white border-4 border-indigo-600 border-solid rounded-lg sm:p-6 md:px-8 md:py-16'>
               <h3 className='m-0 text-2xl font-semibold leading-tight tracking-tight text-black border-0 border-gray-200 sm:text-3xl md:text-4xl'>
-                Personal
+                Personal Plus
               </h3>
               <div className='flex items-end mt-6 leading-7 text-gray-900 border-0 border-gray-200'>
                 <p className='box-border m-0 text-6xl font-semibold leading-none border-solid'>
@@ -527,7 +501,7 @@ export default function Home() {
                 </p>
               </div>
               <p className='mt-6 mb-5 leading-normal text-left text-gray-900 border-0 border-gray-200'>
-                Ideal in every way. All your finances in one place
+                The most powerful analytic tool in NFT market.
               </p>
               <ul className='flex-1 p-0 mt-4 leading-7 text-gray-900 border-0 border-gray-200'>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
@@ -545,7 +519,7 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Crypto & NFTs
+                  Unlimited collections
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
@@ -562,7 +536,7 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Stocks
+                  Insights
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
@@ -579,7 +553,7 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Real estate, business & other ventures
+                  Ulimited linked wallets
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
@@ -596,7 +570,41 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Analytics
+                  Unlimited watchlists
+                </li>
+                <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
+                  <svg
+                    className='w-5 h-5 mr-2 font-semibold leading-7 text-indigo-600 sm:h-5 sm:w-5 md:h-6 md:w-6'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      d='M5 13l4 4L19 7'
+                    ></path>
+                  </svg>
+                  Alerts
+                </li>
+                <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
+                  <svg
+                    className='w-5 h-5 mr-2 font-semibold leading-7 text-indigo-600 sm:h-5 sm:w-5 md:h-6 md:w-6'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      d='M5 13l4 4L19 7'
+                    ></path>
+                  </svg>
+                  Weekly Summary
                 </li>
               </ul>
               <Link href='/#join'>
@@ -607,21 +615,15 @@ export default function Home() {
             </div>
             <div className='relative z-10 flex flex-col items-center max-w-md p-4 mx-auto my-0 border border-solid rounded-lg lg:-ml-3 sm:my-0 sm:p-6 md:my-8 md:p-8'>
               <h3 className='m-0 text-2xl font-semibold leading-tight tracking-tight text-black border-0 border-gray-200 sm:text-3xl md:text-4xl'>
-                Plus
+                Personal
               </h3>
               <div className='flex items-end mt-6 leading-7 text-gray-900 border-0 border-gray-200'>
-                <p className='box-border m-0 text-6xl font-semibold leading-none border-solid'>
-                  TBA
-                </p>
-                <p
-                  className='box-border m-0 border-solid'
-                  style={{ borderImage: 'initial' }}
-                >
-                  / month
+                <p className='box-border m-0 text-4xl font-semibold leading-none border-solid'>
+                  FREE
                 </p>
               </div>
               <p className='mt-6 mb-5 leading-normal text-left text-gray-900 border-0 border-gray-200'>
-                Ideal for enterprise
+                Start your NFT journey.
               </p>
               <ul className='flex-1 p-0 mt-4 leading-7 text-gray-900 border-0 border-gray-200'>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
@@ -639,7 +641,7 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Customizable to your company
+                  3 collections
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
@@ -656,7 +658,7 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Unlimited support
+                  Insights
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
@@ -673,7 +675,7 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Pay per employee
+                  1 wallet
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
@@ -690,7 +692,23 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Analytics
+                  1 Watchlist
+                </li>
+                <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
+                  <FontAwesomeIcon
+                    className='text-gray-600 w-5 h-5 mr-2'
+                    // style={{ fontSize: '10vh' }}
+                    icon={faXmark}
+                  />{' '}
+                  <span>Alerts</span>
+                </li>
+                <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
+                  <FontAwesomeIcon
+                    className='text-gray-600 w-5 h-5 mr-2'
+                    // style={{ fontSize: '10vh' }}
+                    icon={faXmark}
+                  />{' '}
+                  Summary
                 </li>
               </ul>
               <Link href='/#join'>
@@ -708,10 +726,11 @@ export default function Home() {
           <div className='flex flex-col items-start leading-7 text-gray-900 border-0 border-gray-200 lg:items-center lg:flex-row'>
             <div className='box-border flex-1 text-center border-solid sm:text-left'>
               <h2 className='m-0 text-4xl font-semibold leading-tight tracking-tight text-left text-black border-0 border-gray-200 sm:text-5xl'>
-                Boost Your Finances
+                Boost Your NFT journey
               </h2>
-              <p className='mt-2 text-xl text-left text-gray-900 border-0 border-gray-200 sm:text-2xl'>
-                Our tool will help you maximize and boost your profits.
+              <p className='mt-2 md:block hidden text-xl text-left text-gray-900 border-0 border-gray-200 sm:text-2xl'>
+                Floordle is the perfect way to keep track and gain insight of
+                your favourite NFTs!
               </p>
             </div>
             <Link href={'/#join'}>
