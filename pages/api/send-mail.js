@@ -8,7 +8,7 @@ async function sendEmail(req, res) {
       method: 'PUT',
       body: {
         contacts: [{ email: req.body.email }],
-        // listId: ['6c0311a1-e196-4f9b-9e5a-cb8c85cdc3d1'],
+        listId: ['6c0311a1-e196-4f9b-9e5a-cb8c85cdc3d1'],
       },
     };
 
