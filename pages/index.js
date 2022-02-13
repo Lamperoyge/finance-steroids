@@ -29,7 +29,7 @@ export default function Home() {
     try {
       const email = await schema.validate({ email: emailValue });
       try {
-        await axios.post('/api/send-mail', { email });
+        await axios.post('/api/send-mail', { email: email.email });
         setIsEmailSent(true);
         setTimeout(() => {
           setIsEmailSent(false);

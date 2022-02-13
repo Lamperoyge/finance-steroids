@@ -1,27 +1,19 @@
-import sendgrid from '@sendgrid/mail';
-
-sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+const client = require('@sendgrid/client');
+client.setApiKey(process.env.SENDGRID_API_KEY);
 
 async function sendEmail(req, res) {
-  console.log(req.body);
   try {
-    await sendgrid.send({
-      to: 'contact@mustmake.ro', // Your email where you'll receive emails
-      from: 'contact@mustmake.ro', // your website email address here
-      subject: `[Lead from website] : ${JSON.stringify(req.body.email)}`,
-      html: `
-        <body>
-            <div>
-              <div>
-              Email: ${JSON.stringify(req.body.email)}
-              </div>
-              
-            </div>
-        </body>
-      `,
-    });
+    const request = {
+      url: `/v3/marketing/contacts`,
+      method: 'PUT',
+      body: {
+        contacts: [{ email: req.body.email }],
+        // listId: ['6c0311a1-e196-4f9b-9e5a-cb8c85cdc3d1'],
+      },
+    };
+
+    await client.request(request);
   } catch (error) {
-    console.log(error);
     return res.status(error.statusCode || 500).json({ error: error.message });
   }
 
