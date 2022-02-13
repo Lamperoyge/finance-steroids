@@ -74,7 +74,10 @@ export default function Steps() {
           >
             <h3 className='text-2xl font-bold leading-7'>{step.subtitle}</h3>
             <div className='sm:py-10 font-normal leading-none text-gray-700 md:text-lg'>
-              <div dangerouslySetInnerHTML={{ __html: step.content }} />
+              <div
+                className='leading-6'
+                dangerouslySetInnerHTML={{ __html: step.content }}
+              />
             </div>
           </div>
         </div>
