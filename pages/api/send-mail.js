@@ -8,12 +8,12 @@ async function sendEmail(req, res) {
     await sendgrid.send({
       to: 'contact@mustmake.ro', // Your email where you'll receive emails
       from: 'contact@mustmake.ro', // your website email address here
-      subject: `[Lead from website] : ${req.body.email}`,
+      subject: `[Lead from website] : ${JSON.stringify(req.body.email)}`,
       html: `
         <body>
             <div>
               <div>
-              Email: ${req.body.email}
+              Email: ${JSON.stringify(req.body.email)}
               </div>
               
             </div>
