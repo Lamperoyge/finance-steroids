@@ -19,6 +19,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import Steps from 'components/ui/Steps';
+
 export default function Home() {
   const [emailErrors, setEmailErrors] = useState('');
   const [emailValue, setEmailValue] = useState('');
