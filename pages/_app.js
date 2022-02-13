@@ -4,6 +4,8 @@ import { wrapper } from 'redux/store';
 import { AuthProvider } from 'context/AuthContext';
 import { useEffect } from 'react';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import TagManager from 'react-gtm-module';
+import { hotjar } from 'react-hotjar';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // import Font Awesome CSS
 config.autoAddCss = false;
 
