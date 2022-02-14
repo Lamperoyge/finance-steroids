@@ -34,7 +34,7 @@ export default function Header() {
               trackem<span className='text-indigo-600'>.</span>
             </span> */}
             <span className=''>
-              <img className='w-40 h-auto' src={'/SVG/asset.svg'} />
+              <img className='w-40 h-auto' src={'/floordle_black1.svg'} />
             </span>
           </a>
         </Link>
