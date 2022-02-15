@@ -8,9 +8,9 @@ const whitelistedPages = ['/sign-up', '/sign-in'];
 export default function withAuth(Component) {
   function WrappedComponent(props) {
     const { isAuthenticated, user, loading, firestoreUser, logout } = useAuth();
-    const [isRoleLoading, userStatus] = useUserRole(user);
-
     const router = useRouter();
+
+    const [isRoleLoading, userStatus] = useUserRole(user, loading);
 
     const activeLoaders = loading || isRoleLoading;
 
@@ -34,7 +34,6 @@ export default function withAuth(Component) {
       isAuthenticated &&
       router.route !== '/plans'
     ) {
-      debugger;
       router.replace('/plans');
       return null;
     }

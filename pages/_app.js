@@ -1,6 +1,5 @@
 import '../styles/globals.css';
 import 'tailwindcss/tailwind.css';
-import { wrapper } from 'redux/store';
 import { AuthProvider } from 'context/AuthContext';
 import { useEffect } from 'react';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -15,8 +14,11 @@ const tagManagerArgs = {
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
-    TagManager.initialize(tagManagerArgs);
-    hotjar.initialize(2829018, 6);
+    console.log(process.env.NEXT_PUBLIC_NODE_ENV);
+    if (process.env.NEXT_PUBLIC_NODE_ENV !== 'development') {
+      hotjar.initialize(2829018, 6);
+      TagManager.initialize(tagManagerArgs);
+    }
   }, []);
 
   return (
@@ -26,4 +28,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default wrapper.withRedux(MyApp);
+export default MyApp;
