@@ -39,6 +39,7 @@ export default function Footer() {
             href='https://twitter.com/floordle'
             className='text-gray-400 hover:text-gray-500'
             target='_blank'
+            rel='noreferrer'
           >
             <span className='sr-only'>Twitter</span>
             <svg
