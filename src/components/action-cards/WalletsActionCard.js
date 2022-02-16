@@ -3,16 +3,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import ConnectWalletModal from 'components/ui/ConnectWalletModal';
-import { useState } from 'react';
-const wallets = [
-  '0x6155f139cD692496F24BB127F54eAc3b38CB06EE',
-  '0x6155f139cD692496F24BB127F54eAc3b38CB06EE',
-  '0x6155f139cD692496F24BB127F54eAc3b38CB06EE',
-  '0x6155f139cD692496F24BB127F54eAc3b38CB06EE',
-];
+import { useState, useEffect } from 'react';
+import { useFirestore } from 'context/FirestoreContext';
 
 export default function WalletsActionCard() {
   const [openModal, setOpenModal] = useState(false);
+  const { addUserWallet, wallets } = useFirestore();
+
+  const walletCallback = async (connectedWallets) => {
+    setOpenModal(false);
+    try {
+      addUserWallet(connectedWallets.pop());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <ActionCardLayout title='Wallets'>
@@ -22,29 +27,34 @@ export default function WalletsActionCard() {
       >
         Add
       </button>
-      <ConnectWalletModal isOpen={openModal} setIsOpen={setOpenModal} />
+      <ConnectWalletModal
+        callback={walletCallback}
+        isOpen={openModal}
+        setIsOpen={setOpenModal}
+      />
       <ul className='mt-4 divide-y'>
-        {wallets.map((wallet, idx) => {
-          return (
-            <li
-              key={idx}
-              className={
-                'flex justify-between mr-2 hover:text-gray-900 cursor-pointer tracking-wide	text-sm text-gray-600 p-1'
-              }
-            >
-              <div>
-                {wallet.slice(0, 12)}
-                <span className='text-xs text-gray-400'>......</span>
-                {wallet.slice(-12)}
-              </div>
-              <Link passHref href={`/wallets/${wallet}`}>
-                <a>
-                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                </a>
-              </Link>
-            </li>
-          );
-        })}
+        {wallets &&
+          wallets?.map((wallet, idx) => {
+            return (
+              <li
+                key={idx}
+                className={
+                  'flex justify-between mr-2 hover:text-gray-900 cursor-pointer tracking-wide	text-sm text-gray-600 p-1'
+                }
+              >
+                <div>
+                  {wallet.publicKey.slice(0, 12)}
+                  <span className='text-xs text-gray-400'>......</span>
+                  {wallet.publicKey.slice(-12)}
+                </div>
+                <Link passHref href={`/wallets/${wallet.publicKey}`}>
+                  <a>
+                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                  </a>
+                </Link>
+              </li>
+            );
+          })}
       </ul>
     </ActionCardLayout>
   );

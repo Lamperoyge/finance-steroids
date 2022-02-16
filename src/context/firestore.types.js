@@ -1,0 +1,1 @@
+export const ADD_USER_WALLETS = 'ADD_USER_WALLETS';

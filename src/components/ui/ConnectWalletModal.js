@@ -1,83 +1,33 @@
-import { useWeb3React } from '@web3-react/core';
-import { InjectedConnector } from '@web3-react/injected-connector';
 import { Dialog, Transition } from '@headlessui/react';
 import { useEffect, Fragment } from 'react';
 import MetamaskLogo from './icons/metamask';
 import WalletConnectLogo from './icons/walletconnect';
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import { WalletLinkConnector } from '@web3-react/walletlink-connector';
+import useWallet from 'hooks/useWallet';
 const URLS = [
   'https://mainnet.infura.io/v3/8dcf0b36b67249d1b12b34806a67aba0',
   'https://ropsten.infura.io/v3/8dcf0b36b67249d1b12b34806a67aba0',
 ];
 
-//todo change web3-react to default web3
-export const walletlink = new WalletLinkConnector({
-  url: URLS[1],
-  appName: 'floordle',
-  supportedChainIds: [1, 4],
-});
-
-const walletconnect = new WalletConnectConnector({
-  rpc: { 1: URLS[0], 4: URLS[1] },
-  infuraId: '8dcf0b36b67249d1b12b34806a67aba0',
-  qrcode: true,
-  pollingInterval: 15000,
-});
-
-export function resetWalletConnector(connector) {
-  if (connector && connector instanceof WalletConnectConnector) {
-    connector.walletConnectProvider = undefined;
-  }
-}
-
-export const injected = new InjectedConnector({
-  supportedChainIds: [1, 4],
-});
-
-export default function ConnectWalletModal({ isOpen, setIsOpen }) {
-  const { active, account, library, connector, activate, deactivate } =
-    useWeb3React();
-
-  console.log(account, active, connector);
+export default function ConnectWalletModal({ isOpen, setIsOpen, callback }) {
+  const { connectMetamask, wallets, connectWalletConnect, error, setError } =
+    useWallet();
 
   useEffect(() => {
+    setError('');
     if (isOpen) document.getElementById('__next').style.opacity = '0.2';
     else document.getElementById('__next').style.opacity = '1';
   }, [isOpen]);
+
+  useEffect(() => {
+    if (wallets.length) callback(wallets);
+  }, [wallets]);
+
   function closeModal() {
     setIsOpen(false);
   }
 
   function openModal() {
     setIsOpen(true);
-  }
-
-  async function disconnect() {
-    try {
-      deactivate();
-    } catch (ex) {
-      console.log(ex);
-    }
-  }
-
-  async function connectWalletConnect() {
-    try {
-      await disconnect();
-      resetWalletConnector(walletconnect);
-      console.log('here');
-      await activate(walletconnect);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function connectMetamask() {
-    try {
-      await activate(injected);
-    } catch (ex) {
-      console.log(ex);
-    }
   }
 
   const config = [
@@ -136,19 +86,26 @@ export default function ConnectWalletModal({ isOpen, setIsOpen }) {
               >
                 Connect your wallet
               </Dialog.Title>
-              <div className='w-full flex justify-around items-center'>
-                {config.map((item, idx) => {
-                  return (
-                    <div
-                      key={idx}
-                      onClick={item.action}
-                      className='cursor-pointer flex flex-col justify-center items-center'
-                    >
-                      {item.icon()}
-                      {item.title}
-                    </div>
-                  );
-                })}
+              <div className='w-full flex flex-col justify-around items-center'>
+                <div className='flex justify-around items-center w-full'>
+                  {config.map((item, idx) => {
+                    return (
+                      <div
+                        key={idx}
+                        onClick={item.action}
+                        className='cursor-pointer flex flex-col justify-center items-center'
+                      >
+                        {item.icon()}
+                        {item.title}
+                      </div>
+                    );
+                  })}
+                </div>
+                {error && (
+                  <span className='m-4 text-center text-red-400 w-full'>
+                    {error}
+                  </span>
+                )}
               </div>
             </div>
           </Transition.Child>

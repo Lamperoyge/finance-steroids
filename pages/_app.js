@@ -6,6 +6,8 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import TagManager from 'react-gtm-module';
 import { hotjar } from 'react-hotjar';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // import Font Awesome CSS
+import { FirestoreProvider } from 'context/FirestoreContext';
+
 config.autoAddCss = false;
 
 const tagManagerArgs = {
@@ -14,7 +16,6 @@ const tagManagerArgs = {
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_NODE_ENV);
     if (process.env.NEXT_PUBLIC_NODE_ENV !== 'development') {
       hotjar.initialize(2829018, 6);
       TagManager.initialize(tagManagerArgs);
@@ -23,7 +24,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <AuthProvider>
-      <Component {...pageProps} />
+      <FirestoreProvider>
+        <Component {...pageProps} />
+      </FirestoreProvider>
     </AuthProvider>
   );
 }
