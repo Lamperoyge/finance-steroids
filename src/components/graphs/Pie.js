@@ -1,64 +1,32 @@
 import { ResponsivePie } from '@nivo/pie';
 
-const data = [
-  {
-    id: 'elixir',
-    label: 'elixir',
-    value: 279,
-    color: 'hsl(141, 70%, 50%)',
-  },
-  {
-    id: 'php',
-    label: 'php',
-    value: 428,
-    color: 'hsl(136, 70%, 50%)',
-  },
-  {
-    id: 'python',
-    label: 'python',
-    value: 451,
-    color: 'hsl(35, 70%, 50%)',
-  },
-  {
-    id: 'javascript',
-    label: 'javascript',
-    value: 550,
-    color: 'hsl(194, 70%, 50%)',
-  },
-  {
-    id: 'lisp',
-    label: 'lisp',
-    value: 404,
-    color: 'hsl(132, 70%, 50%)',
-  },
-];
-
 const MyResponsivePie = ({
   /* see data tab */
   data,
 }) => (
   <ResponsivePie
     data={data}
-    margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+    margin={{ top: 40, right: 50, bottom: 120, left: 50 }}
     innerRadius={0.5}
-    padAngle={0.7}
-    cornerRadius={3}
+    padAngle={2}
+    colors={{ datum: 'data.color' }}
+    cornerRadius={1}
     activeOuterRadiusOffset={8}
-    sortByValue={true}
-    borderWidth={1}
-    borderColor={{
-      from: 'color',
-      modifiers: [['darker', 0.2]],
-    }}
-    arcLinkLabelsSkipAngle={10}
-    arcLinkLabelsTextColor='#333333'
-    arcLinkLabelsThickness={2}
     arcLinkLabelsColor={{ from: 'color' }}
-    arcLabelsSkipAngle={10}
-    arcLabelsTextColor={{
-      from: 'color',
-      modifiers: [['darker', 2]],
+    arcLinkLabelsTextColor={{ from: 'color' }}
+    sortByValue={false}
+    borderWidth={0}
+    innerRadius={0.7}
+    enableArcLinkLabels={false}
+    theme={{
+      tooltip: {
+        container: {
+          background: 'white',
+          color: '#5046e5',
+        },
+      },
     }}
+    arcLabelsSkipAngle={10}
     legends={[
       {
         anchor: 'bottom',

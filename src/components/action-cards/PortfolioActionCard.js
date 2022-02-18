@@ -1,6 +1,7 @@
 import ActionCardLayout from './ActionCardLayout';
 import Pie from 'components/graphs/Pie';
 import { useFirestore } from 'context/FirestoreContext';
+import { stringToColour } from 'utils/colors';
 export default function PortfolioCard() {
   const { wallets } = useFirestore();
   const syncWallets = wallets.map((wallet) => [...wallet.portfolio]).flat();
@@ -27,9 +28,9 @@ export default function PortfolioCard() {
       value: combinedData[i].value,
       label: combinedData[i].name,
       id: combinedData[i].name,
+      color: stringToColour(combinedData[i].name),
     };
   });
-  console.log(pieData);
   return (
     <ActionCardLayout classes={'h-1/2'} title='Portfolio'>
       <div className='h-full'>
