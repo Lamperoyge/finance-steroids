@@ -15,6 +15,7 @@ import {
   runTransaction,
 } from 'firebase/firestore';
 import { useAuth } from 'context/AuthContext';
+import { getNftBalance } from 'services/wallet';
 
 const INITIAL_STATE = {
   wallets: [],
@@ -51,7 +52,7 @@ export const FirestoreProvider = ({ children }) => {
     if (firestoreUser && firestoreUser.id) {
       unsub = getUserWallets();
     }
-    if (unsub) return () => unsub();
+    if (unsub && typeof unsub === 'function') return () => unsub();
   }, [firestoreUser]);
 
   const addUserWallet = async (publicKey) => {
@@ -60,23 +61,26 @@ export const FirestoreProvider = ({ children }) => {
       const walletDoc = await getDoc(docRef);
 
       if (walletDoc.exists()) {
+        const nfts = await getNftBalance(publicKey);
         await updateDoc(docRef, {
-          linkedWallets: arrayUnion({ publicKey, amount: 12 }),
+          linkedWallets: arrayUnion({ publicKey, portfolio: nfts }),
         });
-      } else
+      } else {
+        const nfts = await getNftBalance(publicKey);
+
         await setDoc(
           docRef,
           {
             linkedWallets: [
               {
                 publicKey,
-                amount: 2,
+                portfolio: nfts,
               },
             ],
           },
           { merge: true }
         );
-      return;
+      }
     } catch (error) {
       throw new Error(error);
     }
