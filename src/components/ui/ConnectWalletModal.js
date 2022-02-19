@@ -14,7 +14,7 @@ export default function ConnectWalletModal({ isOpen, setIsOpen, callback }) {
 
   useEffect(() => {
     setError('');
-    if (isOpen) document.getElementById('__next').style.opacity = '0.2';
+    if (isOpen) document.getElementById('__next').style.opacity = '0.7';
     else document.getElementById('__next').style.opacity = '1';
   }, [isOpen]);
 
@@ -79,10 +79,10 @@ export default function ConnectWalletModal({ isOpen, setIsOpen, callback }) {
             leaveFrom='opacity-100 scale-100'
             leaveTo='opacity-0 scale-95'
           >
-            <div className='inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl'>
+            <div className='inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gray-800 shadow-xl rounded-2xl'>
               <Dialog.Title
                 as='h3'
-                className='text-lg text-center py-4 font-medium leading-6 text-gray-900'
+                className='text-lg text-center py-4 font-medium leading-6 text-white'
               >
                 Connect your wallet
               </Dialog.Title>
@@ -93,7 +93,7 @@ export default function ConnectWalletModal({ isOpen, setIsOpen, callback }) {
                       <div
                         key={idx}
                         onClick={item.action}
-                        className='cursor-pointer flex flex-col justify-center items-center'
+                        className='cursor-pointer flex flex-col justify-center text-white items-center'
                       >
                         {item.icon()}
                         {item.title}

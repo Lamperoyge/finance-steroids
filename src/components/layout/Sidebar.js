@@ -1,17 +1,24 @@
-import Layout from 'components/layout';
-import withAuth from 'hocs/withAuth';
-import Chart from 'components/graphs/Chart';
-import Holdings from 'components/holdings';
+import Link from 'next/link';
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  PortfolioActionCard,
-  WalletsActionCard,
-  WatchlistActionCard,
-} from 'components/action-cards';
-import Sidebar from 'components/layout/Sidebar';
-import StatsCard from 'components/cards/StatsCard';
-import Reports from 'components/holdings/Reports';
-import Wallets from 'components/cards/Wallets';
-import PieCard from 'components/cards/PieCard';
+  faChartBar,
+  faRotate,
+  faCoins,
+  faRectangleList,
+  faBell,
+  faFileLines,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
+
+const menus = [
+  { name: 'Dashboard', icon: faChartBar },
+  { name: 'Watchlists', icon: faRectangleList },
+  { name: 'Portfolio', icon: faFileLines },
+  { name: 'Wallets', icon: faRotate },
+  { name: 'Logout', icon: faXmark },
+];
+
 const mobileCheck = function () {
   let check = false;
   (function (a) {
@@ -28,27 +35,44 @@ const mobileCheck = function () {
   return check;
 };
 
-function Home({ user }) {
+export default function Sidebar() {
+  const width = mobileCheck() ? 'w-24' : 'w-1/8';
+  const [activeMenu, setActiveMenu] = useState(menus[0]);
   return (
-    <div className='flex w-full min-h-screen font-sans bg-gray-800'>
-      <Sidebar />
-      <main className='flex flex-col flex-1 gap-6 p-4'>
-        <header>
-          <h1 className='text-3xl font-semibold leading-loose text-white'>
-            Dashboard
-          </h1>
-          <div className='text-gray-200'>{new Date().toLocaleDateString()}</div>
-        </header>
-        <hr className='border-gray-700' />
-        <StatsCard />
-        <Reports />
-      </main>
-      <aside className='flex flex-col gap-y-6 pt-6 pr-6 w-96'>
-        <Wallets />
-        <PieCard />
-      </aside>
+    <div
+      className={`flex flex-col gap-y-4 items-center py-8 bg-gray-900 ${width}`}
+    >
+      <button className='p-2 bg-opacity-20 rounded-xl bg-primary'>
+        {/* <img className='w-24' src={'/floordle_black1.svg'} /> */}
+      </button>
+      <div className='flex flex-col gap-y-4 items-end self-end w-full'>
+        {menus.map((menu, idx) => {
+          return (
+            <div
+              key={idx}
+              className={`w-full ${
+                activeMenu.name === menu.name
+                  ? 'bg-gray-900 rounded-l-xl relative before:absolute before:w-4 before:h-8 before:-top-8 before:rounded-br-xl before:right-0 before:shadow-inverse-top  after:absolute after:w-4 after:h-8 after:-bottom-8 after:rounded-tr-xl after:right-0 after:shadow-inverse-bottom'
+                  : ''
+              }`}
+            >
+              <button
+                className={`${
+                  activeMenu.name === menu.name
+                    ? 'text-white shadow-primary bg-primary'
+                    : ''
+                } p-4 my-4 mr-4 ml-3 rounded-xl text-white`}
+                onClick={() => setActiveMenu(menu)}
+              >
+                <div className='flex justify-between items-center'>
+                  <FontAwesomeIcon className='w-9 h-9' icon={menu.icon} />
+                  <h1>{menu.name}</h1>
+                </div>
+              </button>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
-
-export default withAuth(Home);
