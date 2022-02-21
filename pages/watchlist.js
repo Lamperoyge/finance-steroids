@@ -1,3 +1,5 @@
+import withAuth from 'hocs/withAuth';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChartBar,
@@ -33,19 +35,18 @@ const stats = [
     icon: faRotate,
   },
 ];
-
-export default function StatsCard() {
+export default function Watchlist({ user }) {
   return (
     <>
-      <h1 className='text-3xl font-semibold leading-loose text-white'>
-        Price floor
-      </h1>
-      <div className='flex gap-6'>
-        {stats.map((stat, idx) => {
+      <button className='bg-indigo-600 py-2 px-2 rounded-lg hover:bg-indigo-400 text-white'>
+        Add new
+      </button>
+      <div className='flex gap-6 grid-cols-3 grid grid-row-1'>
+        {[...stats, ...stats, ...stats, ...stats, ...stats].map((stat, idx) => {
           return (
             <div
               key={idx}
-              className='flex flex-col p-4 w-1/3 bg-gray-900 rounded-lg gap-y-3'
+              className='flex flex-col p-4 w-full bg-gray-900 rounded-lg gap-y-3'
             >
               <div className='flex items-center gap-x-3'>
                 <div className='p-2 bg-gray-800 rounded-lg'>
@@ -83,13 +84,6 @@ export default function StatsCard() {
             </div>
           );
         })}
-      </div>
-      <div className='w-full flex justify-center items-center'>
-        <Link href={'/watchlists'}>
-          <a className='bg-indigo-600 py-2 w-1/2 text-center hover:bg-indigo-500 rounded-lg text-white'>
-            See all
-          </a>
-        </Link>
       </div>
     </>
   );

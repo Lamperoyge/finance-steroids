@@ -10,13 +10,17 @@ import {
   faFileLines,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import Wallets from 'components/cards/Wallets';
+import PieCard from 'components/cards/PieCard';
+import withAuth from 'hocs/withAuth';
+import { useRouter } from 'next/router';
 
 const menus = [
-  { name: 'Dashboard', icon: faChartBar },
-  { name: 'Watchlists', icon: faRectangleList },
-  { name: 'Portfolio', icon: faFileLines },
-  { name: 'Wallets', icon: faRotate },
-  { name: 'Logout', icon: faXmark },
+  { name: 'Dashboard', icon: faChartBar, link: '/home' },
+  { name: 'Watchlist', icon: faRectangleList, link: '/watchlist' },
+  { name: 'Portfolio', icon: faFileLines, link: '/portfolio' },
+  { name: 'Wallets', icon: faRotate, link: '/wallets' },
+  { name: 'Logout', icon: faXmark, link: '/logout' },
 ];
 
 const mobileCheck = function () {
@@ -35,9 +39,13 @@ const mobileCheck = function () {
   return check;
 };
 
-export default function Sidebar() {
-  const width = mobileCheck() ? 'w-24' : 'w-1/8';
-  const [activeMenu, setActiveMenu] = useState(menus[0]);
+function Sidebar() {
+  const router = useRouter();
+
+  const activeRoute = router.pathname;
+
+  const width =
+    typeof window !== 'undefined' && mobileCheck() ? 'w-24' : 'w-1/8';
   return (
     <div
       className={`flex flex-col gap-y-4 items-center py-8 bg-gray-900 ${width}`}
@@ -51,24 +59,25 @@ export default function Sidebar() {
             <div
               key={idx}
               className={`w-full ${
-                activeMenu.name === menu.name
+                activeRoute === menu.link
                   ? 'bg-gray-900 rounded-l-xl relative before:absolute before:w-4 before:h-8 before:-top-8 before:rounded-br-xl before:right-0 before:shadow-inverse-top  after:absolute after:w-4 after:h-8 after:-bottom-8 after:rounded-tr-xl after:right-0 after:shadow-inverse-bottom'
                   : ''
               }`}
             >
-              <button
-                className={`${
-                  activeMenu.name === menu.name
-                    ? 'text-white shadow-primary bg-primary'
-                    : ''
-                } p-4 my-4 mr-4 ml-3 rounded-xl text-white`}
-                onClick={() => setActiveMenu(menu)}
-              >
-                <div className='flex justify-between items-center'>
-                  <FontAwesomeIcon className='w-9 h-9' icon={menu.icon} />
-                  <h1>{menu.name}</h1>
-                </div>
-              </button>
+              <Link href={menu.link}>
+                <button
+                  className={`${
+                    activeRoute === menu.link
+                      ? 'text-white shadow-primary bg-primary'
+                      : ''
+                  } p-4 my-4 mr-4 ml-3 rounded-xl text-white`}
+                >
+                  <div className='flex justify-between items-center'>
+                    <FontAwesomeIcon className='w-9 h-9' icon={menu.icon} />
+                    <h1>{menu.name}</h1>
+                  </div>
+                </button>
+              </Link>
             </div>
           );
         })}
@@ -76,3 +85,37 @@ export default function Sidebar() {
     </div>
   );
 }
+
+const routesToTitleMap = {
+  '/home': 'Dashboard',
+  '/watchlist': 'Watchlist',
+  '/portfolio': 'Portfolio',
+  '/wallets': 'Wallets',
+};
+
+function SidebarLayout({ children }) {
+  const router = useRouter();
+
+  const title = routesToTitleMap[router.pathname] || '';
+  return (
+    <div className='flex w-full min-h-screen font-sans bg-gray-800'>
+      <Sidebar />
+      <main className='flex flex-col flex-1 gap-6 p-4'>
+        <header>
+          <h1 className='text-3xl font-semibold leading-loose text-white'>
+            {title}
+          </h1>
+          <div className='text-gray-200'>{new Date().toLocaleDateString()}</div>
+        </header>
+        <hr className='border-gray-700' />
+        {children}
+      </main>
+      <aside className='flex flex-col gap-y-6 pt-6 pr-6 w-96'>
+        <Wallets />
+        <PieCard />
+      </aside>
+    </div>
+  );
+}
+
+export default withAuth(SidebarLayout);

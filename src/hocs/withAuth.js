@@ -9,11 +9,9 @@ export default function withAuth(Component) {
   function WrappedComponent(props) {
     const { isAuthenticated, user, loading, firestoreUser, logout } = useAuth();
     const router = useRouter();
-
-    const [isRoleLoading, userStatus] = useUserRole(user, loading);
+    const [isRoleLoading, userStatus] = useUserRole();
 
     const activeLoaders = loading || isRoleLoading;
-
     if (activeLoaders) {
       return <Spinner />;
     }
@@ -28,15 +26,15 @@ export default function withAuth(Component) {
       router.replace('/sign-in');
       return null;
     }
-    if (
-      !userStatus &&
-      !activeLoaders &&
-      isAuthenticated &&
-      router.route !== '/plans'
-    ) {
-      router.replace('/plans');
-      return null;
-    }
+    // if (
+    //   !userStatus &&
+    //   !activeLoaders &&
+    //   isAuthenticated &&
+    //   router.route !== '/plans'
+    // ) {
+    //   router.replace('/plans');
+    //   return null;
+    // }
 
     return <Component user={user} firestoreUser={firestoreUser} {...props} />;
   }

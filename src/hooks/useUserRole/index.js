@@ -1,9 +1,12 @@
 import isUserPersonal from './isUserPersonal';
 import { useState, useEffect } from 'react';
+import { useAuth } from 'context/AuthContext';
 
-export default function usePremiumStatus(user, loading) {
+export default function usePremiumStatus() {
+  const { user, loading } = useAuth();
+
   const [premiumStatus, setPremiumStatus] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(loading);
 
   useEffect(() => {
     if (user && !loading) {
