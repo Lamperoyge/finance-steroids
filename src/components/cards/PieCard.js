@@ -54,7 +54,6 @@ export default function PieCard() {
     }
   }, []);
 
-  console.log(Object.keys(pieData));
   return (
     <div className='flex flex-col p-6 bg-gray-900 rounded-lg gap-y-6'>
       <div className='flex justify-between items-center'>

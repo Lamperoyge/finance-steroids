@@ -14,7 +14,6 @@ export default function PortfolioCard() {
       };
       return acc;
     } else {
-      console.log(obj.name);
       acc[obj.token_address] = {
         value: 0,
         name: obj.name,

@@ -1,11 +1,12 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 const FirestoreContext = createContext({});
-import { ADD_USER_WALLETS } from './firestore.types';
+import { ADD_USER_WALLETS, ADD_USER_WATCHLIST } from './firestore.types';
 import { db } from 'utils/firebase-config';
 import {
   doc,
   addDoc,
   getDoc,
+  getDocs,
   setDoc,
   collection,
   onSnapshot,
@@ -13,12 +14,20 @@ import {
   arrayUnion,
   arrayRemove,
   runTransaction,
+  documentId,
+  query,
+  where,
+  Timestamp,
+  serverTimestamp,
+  orderBy,
 } from 'firebase/firestore';
 import { useAuth } from 'context/AuthContext';
 import { getNftBalance } from 'services/wallet';
+import axios from 'axios';
 
 const INITIAL_STATE = {
   wallets: [],
+  watchlist: [],
 };
 
 const reducer = function (state, { type, payload }) {
@@ -27,6 +36,11 @@ const reducer = function (state, { type, payload }) {
       return {
         ...state,
         wallets: payload,
+      };
+    case ADD_USER_WATCHLIST:
+      return {
+        ...state,
+        watchlist: payload,
       };
     default:
       return { ...state };
@@ -53,6 +67,60 @@ export const FirestoreProvider = ({ children }) => {
       unsub = getUserWallets();
     }
     if (unsub && typeof unsub === 'function') return () => unsub();
+  }, [firestoreUser]);
+
+  const addToWatchlist = (items) => {
+    dispatch({ type: ADD_USER_WATCHLIST, payload: items });
+  };
+
+  const timestampToMinutes = (timestamp) => {
+    return Math.floor(timestamp / 60000);
+  };
+
+  const fetchCollections = async () => {
+    const q = query(
+      collection(db, 'collections'),
+      where(documentId(), 'in', firestoreUser.collections)
+    );
+
+    const querySnapshot = await getDocs(q);
+    let items = [];
+    querySnapshot.forEach(async (query) => {
+      let dataItem = query.data();
+      const updatedDate = dataItem.updated;
+      const currentDate = Timestamp.now();
+      if (updatedDate) {
+        const diff =
+          timestampToMinutes(currentDate.toMillis()) -
+          timestampToMinutes(updatedDate.toMillis());
+        if (diff > 30) {
+          //update stats
+          const { data } = await axios.post('/api/update-stats', {
+            slug: dataItem.slug,
+          });
+          if (data.stats) {
+            debugger;
+            const ref = doc(db, 'collections', dataItem.token_address);
+            await updateDoc(ref, {
+              stats: data.stats,
+              updated: serverTimestamp(),
+            });
+            dataItem.stats = data.stats;
+          }
+        }
+      }
+      items.push(dataItem);
+    });
+    dispatch({
+      type: ADD_USER_WATCHLIST,
+      payload: items,
+    });
+  };
+
+  useEffect(async () => {
+    if (firestoreUser && firestoreUser.collections) {
+      fetchCollections();
+    }
   }, [firestoreUser]);
 
   const addUserWallet = async (publicKey) => {
@@ -88,7 +156,13 @@ export const FirestoreProvider = ({ children }) => {
 
   return (
     <FirestoreContext.Provider
-      value={{ addUserWallet, wallets: state.wallets }}
+      value={{
+        addUserWallet,
+        wallets: state.wallets,
+        watchlist: state.watchlist,
+        fetchCollections,
+        addToWatchlist,
+      }}
     >
       {children}
     </FirestoreContext.Provider>

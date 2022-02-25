@@ -80,7 +80,6 @@ function Plans({ firestoreUser }) {
               <h1>Choose your billing period</h1>
               <div className='grid grid-cols-2 sm:grid-cols-4'>
                 {plans.map((item, idx) => {
-                  console.log(plan.id, item.id);
                   return (
                     <div
                       onClick={() => setPlan(item)}

@@ -1,5 +1,14 @@
 import { db } from 'utils/firebase-config';
-import { doc, setDoc, onSnapshot } from 'firebase/firestore';
+import {
+  doc,
+  setDoc,
+  addDoc,
+  collection,
+  onSnapshot,
+  updateDoc,
+  arrayUnion,
+  serverTimestamp,
+} from 'firebase/firestore';
 
 export const addUserWallet = async (uid, publicKey) => {
   try {
@@ -7,6 +16,22 @@ export const addUserWallet = async (uid, publicKey) => {
       publicKey,
     });
     return walletRef;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const addCollection = async (obj, uid) => {
+  try {
+    await setDoc(doc(db, 'collections', obj.token_address), {
+      ...obj,
+      created: serverTimestamp(),
+      updated: serverTimestamp(),
+    });
+    // await setDoc(doc(db, 'users', uid), { watchlist: [] }, { merge: true });
+    await updateDoc(doc(db, 'users', uid), {
+      collections: arrayUnion(obj.token_address),
+    });
   } catch (error) {
     throw new Error(error);
   }

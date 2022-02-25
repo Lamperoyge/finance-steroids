@@ -9,6 +9,14 @@ import '@fortawesome/fontawesome-svg-core/styles.css'; // import Font Awesome CS
 import { FirestoreProvider } from 'context/FirestoreContext';
 import SidebarLayout from 'components/layout/SidebarLayout';
 import { useRouter } from 'next/router';
+import { getDefaultProvider } from 'ethers';
+import { NftProvider, useNft } from 'use-nft';
+
+// We are using the "ethers" fetcher here.
+const ethersConfig = {
+  provider: getDefaultProvider('homestead'),
+};
+
 config.autoAddCss = false;
 
 const tagManagerArgs = {
@@ -31,7 +39,9 @@ function MyApp({ Component, pageProps }) {
     }
     return (
       <SidebarLayout>
-        <Component {...pageProps} />
+        <NftProvider fetcher={['ethers', ethersConfig]}>
+          <Component {...pageProps} />
+        </NftProvider>
       </SidebarLayout>
     );
   };

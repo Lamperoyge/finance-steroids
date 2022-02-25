@@ -1,6 +1,10 @@
 import withAuth from 'hocs/withAuth';
-
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
+import { useAuth } from 'context/AuthContext';
+import { useFirestore } from 'context/FirestoreContext';
+
 import {
   faChartBar,
   faRotate,
@@ -11,79 +15,262 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
+import { addCollection } from 'services/firestore';
+const validationSchema = Yup.object({
+  collection: Yup.string().min(2),
+  contract: Yup.string().min(20),
+  openSea: Yup.string().min(30),
+});
 
-const stats = [
-  {
-    title: 'Total Revenue',
-    percentage: '+32.40%',
-    value: '$10,243.00',
-    status: 'up',
-    icon: faCoins,
-  },
-  {
-    title: 'Total Dish Ordered',
-    percentage: '-12.40%',
-    value: '23,456',
-    status: 'down',
-    icon: faFileLines,
-  },
-  {
-    title: 'Total Customer',
-    percentage: '+2.40%',
-    value: '1,234',
-    status: 'up',
-    icon: faRotate,
-  },
-];
 export default function Watchlist({ user }) {
+  const [isFormOpen, setFormOpen] = useState(false);
+  const [error, setError] = useState('');
+  const [collection, setCollection] = useState(null);
+  const { firestoreUser } = useAuth();
+  const { watchlist, addToWatchlist } = useFirestore();
+
+  const handleSubmit = (values) => {
+    const valuesLength = Object.values(values).filter((i) => i).length;
+    if (valuesLength === 0) {
+      setError('You need to choose at least one option');
+      return;
+    }
+    if (valuesLength > 1) {
+      setError('You need to choose only one option');
+      return;
+    }
+    try {
+      addCollection(collection, firestoreUser.id);
+      setFormOpen(false);
+      setCollection(null);
+      addToWatchlist([...watchlist, collection]);
+    } catch (error) {
+      console.log(error);
+      alert('Woops! Something went wrong');
+    }
+  };
+
+  const searchByContract = async (contract) => {
+    try {
+      const { data } = await axios.post('/api/search-contract', {
+        address: contract,
+      });
+
+      if (data.data) {
+        setCollection({
+          image: data.data.collection.image_url,
+          token_address:
+            data.data.collection.primary_asset_contracts[0].address,
+          name: data.data.collection.primary_asset_contracts[0].name,
+          ...data.data.collection,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const searchByOpensea = async (value) => {
+    try {
+      const { data } = await axios.post('/api/get-opensea-collection', {
+        slug: value.split('/collection/').pop(),
+      });
+      if (data.data) {
+        setCollection({
+          image: data.data.collection.image_url,
+          token_address:
+            data.data.collection.primary_asset_contracts[0].address,
+          name: data.data.collection.primary_asset_contracts[0].name,
+          ...data.data.collection,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const formConfig = [
+    {
+      type: 'input',
+      label: 'Enter contract address ( Ethereum chain only )',
+      placeholder: '0x....',
+      name: 'contract',
+      action: searchByContract,
+      actionTitle: 'Search',
+    },
+    {
+      type: 'input',
+      label: 'OpenSea Link',
+      placeholder: 'https://opensea.io/collection/boredapeyachtclub',
+      name: 'openSea',
+      action: searchByOpensea,
+      actionTitle: 'Search',
+    },
+  ];
+  const handleInputChange = (e, handleChange) => {
+    handleChange(e);
+  };
+
   return (
     <>
-      <button className='bg-indigo-600 py-2 px-2 rounded-lg hover:bg-indigo-400 text-white'>
-        Add new
+      {isFormOpen && (
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={{ collection: '', openSea: '', contract: '' }}
+          onSubmit={handleSubmit}
+        >
+          {({
+            values,
+            handleChange,
+            handleSubmit,
+            errors,
+            touched,
+            handleBlur,
+          }) => {
+            return (
+              <form onSubmit={handleSubmit}>
+                <div className='flex items-center'>
+                  <div className='w-full'>
+                    {formConfig.map((item, idx) => {
+                      return (
+                        <div key={idx} className='py-2'>
+                          <label className='font-medium text-gray-200'>
+                            {item.label}
+                          </label>
+                          <div className='flex items-center'>
+                            {item.type === 'select' ? (
+                              <select
+                                {...item}
+                                onChange={(e) => {
+                                  handleInputChange(e, handleChange);
+                                }}
+                                onBlur={handleBlur}
+                                value={values[item.name]}
+                                className='block w-1/2 px-4 text-white py-2 mt-2 text-sm placeholder-gray-600 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50'
+                              ></select>
+                            ) : (
+                              <input
+                                {...item}
+                                onChange={(e) => {
+                                  handleInputChange(e, handleChange);
+                                }}
+                                onBlur={handleBlur}
+                                value={values[item.name]}
+                                className='block w-1/2 px-4 text-white py-2 mt-2 text-sm placeholder-gray-600 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50'
+                              />
+                            )}
+                            {item.action ? (
+                              <button
+                                type='button'
+                                onClick={() => item.action(values[item.name])}
+                                className='ml-4 text-white py-2 mt-2 px-4 hover:bg-indigo-400 text-sm rounded-xl bg-indigo-600'
+                              >
+                                {item.actionTitle}
+                              </button>
+                            ) : null}
+                          </div>
+                          {errors[item.name] && touched[item.name] && (
+                            <span className='text-lg text-red-400'>
+                              {errors[item.name]}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {collection ? (
+                    <div className='my-4 w-1/2 flex flex-col justify-center items-center'>
+                      <div className='flex h-1/3 w-1/3 justify-center items-center'>
+                        <img
+                          src={collection.image}
+                          className='h-full w-full object-cover object-center'
+                        />
+                      </div>
+                      <div className='flex justify-center items-center flex-col text-white w-full mt-4'>
+                        <h1>{collection.name}</h1>
+                        <h1 className='text-sm'>{collection.token_address}</h1>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+                {!!error && (
+                  <span className='text-lg text-red-400'>{error}</span>
+                )}
+                <button
+                  type='submit'
+                  className='bg-indigo-600 w-full py-2 px-2 rounded-lg hover:bg-indigo-400 text-white'
+                >
+                  Submit
+                </button>
+              </form>
+            );
+          }}
+        </Formik>
+      )}
+      <button
+        onClick={() => {
+          setFormOpen(!isFormOpen);
+          setCollection(null);
+        }}
+        className={`${
+          isFormOpen
+            ? 'bg-transparent border border-indigo-600'
+            : 'bg-indigo-600'
+        } py-2 px-2 rounded-lg hover:bg-indigo-400 text-white`}
+      >
+        {isFormOpen ? 'Close' : 'Add new'}
       </button>
       <div className='flex gap-6 grid-cols-3 grid grid-row-1'>
-        {[...stats, ...stats, ...stats, ...stats, ...stats].map((stat, idx) => {
-          return (
-            <div
-              key={idx}
-              className='flex flex-col p-4 w-full bg-gray-900 rounded-lg gap-y-3'
-            >
-              <div className='flex items-center gap-x-3'>
-                <div className='p-2 bg-gray-800 rounded-lg'>
-                  <FontAwesomeIcon icon={stat.icon} />
-                </div>
-                <span
-                  className={`text-xs font-medium ${
-                    stat.status === 'up'
-                      ? 'text-accent-green'
-                      : 'text-accent-red'
-                  }`}
-                >
-                  {stat.percentage}
-                </span>
-                <div
-                  className={`p-0.5 rounded-full ${
-                    stat.status === 'up'
-                      ? 'bg-accent-green/20'
-                      : 'bg-accent-red/20'
-                  }`}
-                >
-                  {stat.status === 'up' ? (
+        {watchlist &&
+          watchlist.map((stat, idx) => {
+            return (
+              <div
+                key={idx}
+                className='flex flex-col p-4 w-full bg-gray-900 rounded-lg gap-y-3'
+              >
+                <div className='flex items-center gap-x-3'>
+                  <div className='p-2 bg-gray-800 flex justify-center items-center w-full rounded-lg'>
+                    <img src={stat.image} />
+                  </div>
+
+                  <div className={`p-0.5 rounded-full bg-accent-green/20`}>
+                    {/* {stat.status === 'up' ? (
                     <span className='fill-current text-accent-green'>up</span>
                   ) : (
                     <span className='fill-current text-accent-red'>dw</span>
-                  )}
+                  )} */}
+                  </div>
+                </div>
+                <div className='text-xl font-semibold text-white'>
+                  {stat.name}
+                </div>
+                <div className='text-lg flex justify-between items-center tracking-wide text-gray-100'>
+                  <span>Price floor</span>
+                  <span className='font-bold'>{stat.stats.floor_price}</span>
+                </div>
+                <div className='text-lg flex justify-between items-center tracking-wide text-gray-100'>
+                  <span>Market Cap</span>
+                  <span className='font-bold'>
+                    {(stat.stats.market_cap / 10000).toFixed(1)}
+                  </span>
+                </div>
+                <div className='text-lg flex justify-between items-center tracking-wide text-gray-100'>
+                  <span>Avg. Price</span>
+                  <span className='font-bold'>
+                    {stat.stats.average_price.toFixed(1)}
+                  </span>
+                </div>
+                <div className='text-lg flex justify-between items-center tracking-wide text-gray-100'>
+                  <span>Volume</span>
+                  <span className='font-bold'>
+                    {(stat.stats.total_volume / 1000).toFixed(1)}
+                  </span>
                 </div>
               </div>
-              <div className='text-3xl font-semibold text-white'>
-                {stat.value}
-              </div>
-              <div className='text-sm tracking-wide text-gray-500'>
-                {stat.title}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </>
   );
