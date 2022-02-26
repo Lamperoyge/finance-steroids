@@ -126,7 +126,7 @@ function SignUpPage() {
                 <div className='relative'>
                   <h1 className='text-lg py-10'>
                     {"Don't have an account?"}
-                    <Link passHref href='/sign-in'>
+                    <Link passHref href='/sign-up'>
                       <a className='ml-2 cursor-pointer text-blue-600 underline decoration-blue-600 hover:decoration-blue-400 hover:text-blue:400'>
                         Sign up
                       </a>

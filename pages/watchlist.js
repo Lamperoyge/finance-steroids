@@ -222,7 +222,7 @@ export default function Watchlist({ user }) {
       >
         {isFormOpen ? 'Close' : 'Add new'}
       </button>
-      <div className='flex gap-6 grid-cols-3 grid grid-row-1'>
+      <div className='flex gap-6 grid-cols-1 sm:grid-cols-3 grid grid-row-1'>
         {watchlist &&
           watchlist.map((stat, idx) => {
             return (

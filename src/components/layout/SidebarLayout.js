@@ -14,13 +14,14 @@ import Wallets from 'components/cards/Wallets';
 import PieCard from 'components/cards/PieCard';
 import withAuth from 'hocs/withAuth';
 import { useRouter } from 'next/router';
+import { useAuth } from 'context/AuthContext';
 
 const menus = [
   { name: 'Dashboard', icon: faChartBar, link: '/home' },
   { name: 'Watchlist', icon: faRectangleList, link: '/watchlist' },
   { name: 'Portfolio', icon: faFileLines, link: '/portfolio' },
   { name: 'Wallets', icon: faRotate, link: '/wallets' },
-  { name: 'Logout', icon: faXmark, link: '/logout' },
+  { name: 'Logout', icon: faXmark, action: 'logout' },
 ];
 
 const mobileCheck = function () {
@@ -41,11 +42,15 @@ const mobileCheck = function () {
 
 function Sidebar() {
   const router = useRouter();
+  const { logout } = useAuth();
 
   const activeRoute = router.pathname;
 
-  const width =
-    typeof window !== 'undefined' && mobileCheck() ? 'w-24' : 'w-1/8';
+  const actionsMap = {
+    logout: logout,
+  };
+  const isMobile = mobileCheck();
+  const width = typeof window !== 'undefined' && isMobile ? 'w-24' : 'w-1/8';
   return (
     <div
       className={`flex flex-col gap-y-4 items-center py-8 bg-gray-900 ${width}`}
@@ -64,8 +69,24 @@ function Sidebar() {
                   : ''
               }`}
             >
-              <Link href={menu.link}>
+              {menu.link ? (
+                <Link href={menu.link}>
+                  <button
+                    className={`${
+                      activeRoute === menu.link
+                        ? 'text-white shadow-primary bg-primary'
+                        : ''
+                    } p-4 my-4 mr-4 ml-3 rounded-xl text-white`}
+                  >
+                    <div className='flex justify-between items-center'>
+                      <FontAwesomeIcon className='w-9 h-9' icon={menu.icon} />
+                      {!isMobile && <h1>{menu.name}</h1>}
+                    </div>
+                  </button>
+                </Link>
+              ) : (
                 <button
+                  onClick={actionsMap[menu.action]}
                   className={`${
                     activeRoute === menu.link
                       ? 'text-white shadow-primary bg-primary'
@@ -74,10 +95,10 @@ function Sidebar() {
                 >
                   <div className='flex justify-between items-center'>
                     <FontAwesomeIcon className='w-9 h-9' icon={menu.icon} />
-                    <h1>{menu.name}</h1>
+                    {!isMobile && <h1>{menu.name}</h1>}
                   </div>
                 </button>
-              </Link>
+              )}
             </div>
           );
         })}
@@ -96,11 +117,13 @@ const routesToTitleMap = {
 function SidebarLayout({ children }) {
   const router = useRouter();
 
+  const isMobile = mobileCheck();
+
   const title = routesToTitleMap[router.pathname] || '';
   return (
     <div className='flex w-full min-h-screen font-sans bg-gray-800'>
       <Sidebar />
-      <main className='flex flex-col flex-1 gap-6 p-4'>
+      <main className='bg-gray-800 flex flex-col flex-1 gap-6 p-4'>
         <header>
           <h1 className='text-3xl font-semibold leading-loose text-white'>
             {title}
@@ -109,11 +132,19 @@ function SidebarLayout({ children }) {
         </header>
         <hr className='border-gray-700' />
         {children}
+        {isMobile && (
+          <div className='flex flex-col w-full justify-center items-center'>
+            <Wallets />
+            <PieCard />
+          </div>
+        )}
       </main>
-      <aside className='flex flex-col gap-y-6 pt-6 pr-6 w-96'>
-        <Wallets />
-        <PieCard />
-      </aside>
+      {!isMobile && (
+        <aside className='flex flex-col gap-y-6 pt-6 pr-6 w-96'>
+          <Wallets />
+          <PieCard />
+        </aside>
+      )}
     </div>
   );
 }

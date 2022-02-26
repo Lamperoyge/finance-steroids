@@ -6,6 +6,7 @@ export default function PieCard() {
   const [pieData, setPieData] = useState({});
   const { wallets } = useFirestore();
 
+  console.log(wallets);
   useEffect(() => {
     if (wallets.length) {
       const syncWallets = wallets.map((wallet) => [...wallet.portfolio]).flat();
@@ -54,6 +55,7 @@ export default function PieCard() {
     }
   }, []);
 
+  console.log(pieData);
   return (
     <div className='flex flex-col p-6 bg-gray-900 rounded-lg gap-y-6'>
       <div className='flex justify-between items-center'>

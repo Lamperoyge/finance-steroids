@@ -20,7 +20,7 @@ export default function Wallets() {
   };
 
   return (
-    <div className='flex flex-col p-6 bg-gray-900 rounded-lg gap-y-6'>
+    <div className='flex flex-col p-6 w-full m-2 sm:m-0 sm:w-auto bg-gray-900 rounded-lg gap-y-6'>
       <ConnectWalletModal
         callback={walletCallback}
         isOpen={openModal}
@@ -37,18 +37,12 @@ export default function Wallets() {
       </div>
       <hr className='border-gray-700' />
       <div className='flex flex-col gap-y-4'>
-        {/* <div v-for="order in mostOrdered" className="flex gap-x-4 items-center">
-        <img className="w-14 h-14" :src="`/img/${order.image}`" alt="" />
-        <div className="flex flex-col gap-y-0.5">
-          <div className="text-sm font-medium text-white">{{ order.name }}</div>
-          <div className="text-xs text-gray-500">{{ order.count }} dishes ordered</div>
-        </div>
-      </div> */}
         {wallets &&
           wallets?.map((wallet, idx) => {
+            console.log(wallet);
             return (
               <div key={idx} className='flex gap-x-4 items-center'>
-                <Link href={`wallets/${wallet}`}>
+                <Link href={`wallets/${wallet.publicKey}`}>
                   <FontAwesomeIcon
                     className='text-white cursor-pointer'
                     icon={faArrowUpRightFromSquare}
@@ -61,7 +55,7 @@ export default function Wallets() {
                     <span className='text-xs text-gray-400'>......</span>
                     {wallet.publicKey.slice(-12)}
                   </div>
-                  <a href={`https://etherscan.io/address/${wallet}`}>
+                  <a href={`https://etherscan.io/address/${wallet.publicKey}`}>
                     <div className='hover:underline text-xs text-gray-500'>
                       View on etherscan
                     </div>

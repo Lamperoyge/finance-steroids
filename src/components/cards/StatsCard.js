@@ -18,6 +18,17 @@ export default function StatsCard() {
     <>
       <h1 className='text-3xl font-semibold leading-loose text-white'>Stats</h1>
       <div className='flex gap-6'>
+        {!watchlist.length && (
+          <div className='text-gray-400'>
+            <span>
+              Go to{' '}
+              <Link href='/watchlist' passHref>
+                <a className='text-gray-200 underline'>Watchlist</a>
+              </Link>{' '}
+              and add collections to follow
+            </span>
+          </div>
+        )}
         {watchlist &&
           watchlist.slice(0, 3).map((stat, idx) => {
             return (
