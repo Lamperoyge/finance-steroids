@@ -39,7 +39,6 @@ export default function Wallets() {
       <div className='flex flex-col gap-y-4'>
         {wallets &&
           wallets?.map((wallet, idx) => {
-            console.log(wallet);
             return (
               <div key={idx} className='flex gap-x-4 items-center'>
                 <Link href={`wallets/${wallet.publicKey}`}>

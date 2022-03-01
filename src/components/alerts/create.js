@@ -1,75 +1,54 @@
-import withAuth from 'hocs/withAuth';
-import { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
-import { useAuth } from 'context/AuthContext';
-import { useFirestore } from 'context/FirestoreContext';
-
-import {
-  faChartBar,
-  faRotate,
-  faCoins,
-  faRectangleList,
-  faBell,
-  faFileLines,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
-import { Formik, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { addCollection } from 'services/firestore';
+import { useState } from 'react';
+import { addCollection, addAlert } from 'services/firestore';
+import { useAuth } from 'context/AuthContext';
 const validationSchema = Yup.object({
-  collection: Yup.string().min(2),
-  contract: Yup.string().min(20),
+  watchlist: Yup.string().min(2),
   openSea: Yup.string().min(30),
+  alertType: Yup.string().required('Please select what kind of alert you want'),
+  target: Yup.number().required(),
 });
 
-export default function Watchlist({ user }) {
+import { useFirestore } from 'context/FirestoreContext';
+export default function CreateAlert() {
   const [isFormOpen, setFormOpen] = useState(false);
   const [error, setError] = useState('');
   const [collection, setCollection] = useState(null);
   const { firestoreUser } = useAuth();
-  const { watchlist, addToWatchlist } = useFirestore();
+  const { watchlist, addToWatchlist, addUserAlert } = useFirestore();
 
   const handleSubmit = (values) => {
-    const valuesLength = Object.values(values).filter((i) => i).length;
-    if (valuesLength === 0) {
-      setError('You need to choose at least one option');
-      return;
-    }
-    if (valuesLength > 1) {
-      setError('You need to choose only one option');
-      return;
-    }
-    try {
-      addCollection(collection, firestoreUser.id);
-      setFormOpen(false);
-      setCollection(null);
-      addToWatchlist([...watchlist, collection]);
-    } catch (error) {
-      console.log(error);
-      alert('Woops! Something went wrong');
-    }
-  };
-
-  const searchByContract = async (contract) => {
-    try {
-      const { data } = await axios.post('/api/search-contract', {
-        address: contract,
-      });
-
-      if (data.data) {
-        setCollection({
-          image: data.data.collection.image_url,
-          token_address:
-            data.data.collection.primary_asset_contracts[0].address,
-          name: data.data.collection.primary_asset_contracts[0].name,
-          ...data.data.collection,
-        });
+    if (values.openSea) {
+      const valuesLength = Object.values(values).filter((i) => i).length;
+      if (valuesLength === 0) {
+        setError('You need to choose at least one option');
+        return;
       }
-    } catch (error) {
-      console.log(error);
+      if (valuesLength > 1) {
+        setError('You need to choose only one option');
+        return;
+      }
+      try {
+        addCollection(collection, firestoreUser.id);
+        addToWatchlist([...watchlist, collection]);
+      } catch (error) {
+        console.log(error);
+        alert('Woops! Something went wrong');
+      }
     }
+    addAlert(
+      { ...values, target: Number(values.target), slug: collection.name },
+      firestoreUser
+    );
+    addUserAlert({
+      ...values,
+      slug: collection.name,
+      target: Number(values.target),
+      active: true,
+    });
+    setCollection(null);
+    setFormOpen(false);
   };
 
   const searchByOpensea = async (value) => {
@@ -93,12 +72,11 @@ export default function Watchlist({ user }) {
 
   const formConfig = [
     {
-      type: 'input',
-      label: 'Enter contract address ( Ethereum chain only )',
-      placeholder: '0x....',
-      name: 'contract',
-      action: searchByContract,
-      actionTitle: 'Search',
+      type: 'select',
+      name: 'watchlist',
+      data: watchlist,
+      label: 'Select from watchlist',
+      onChangeAction: setCollection,
     },
     {
       type: 'input',
@@ -108,17 +86,30 @@ export default function Watchlist({ user }) {
       action: searchByOpensea,
       actionTitle: 'Search',
     },
+    {
+      type: 'select',
+      label: 'Select alert type',
+      name: 'alertType',
+      data: [
+        { slug: 'market_cap', name: 'Market Cap' },
+        { slug: 'floor_price', name: 'Floor price' },
+        { slug: 'average_price', name: 'Avg Price' },
+      ],
+    },
+    {
+      type: 'input',
+      label: 'Target',
+      placeholder: '10',
+      name: 'target',
+    },
   ];
-  const handleInputChange = (e, handleChange) => {
-    handleChange(e);
-  };
 
   return (
-    <>
+    <div className='w-full'>
       {isFormOpen && (
         <Formik
           validationSchema={validationSchema}
-          initialValues={{ collection: '', openSea: '', contract: '' }}
+          initialValues={{ watchlist: '', openSea: '' }}
           onSubmit={handleSubmit}
         >
           {({
@@ -128,6 +119,7 @@ export default function Watchlist({ user }) {
             errors,
             touched,
             handleBlur,
+            setFieldValue,
           }) => {
             return (
               <form onSubmit={handleSubmit}>
@@ -144,18 +136,38 @@ export default function Watchlist({ user }) {
                               <select
                                 {...item}
                                 onChange={(e) => {
-                                  handleInputChange(e, handleChange);
+                                  item.name === 'watchlist'
+                                    ? setCollection(
+                                        watchlist.find(
+                                          (i) =>
+                                            i.token_address === e.target.value
+                                        )
+                                      ) && handleChange(e)
+                                    : null;
+                                  handleChange(e);
                                 }}
-                                onBlur={handleBlur}
                                 value={values[item.name]}
+                                onBlur={handleBlur}
                                 className='block w-1/2 px-4 text-white py-2 mt-2 text-sm placeholder-gray-600 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50'
-                              ></select>
+                              >
+                                <option value=''>Select a collection</option>
+                                {item.data.map((option, idx) => {
+                                  return (
+                                    <option
+                                      value={
+                                        option.token_address || option.slug
+                                      }
+                                      key={idx}
+                                    >
+                                      {option.name}
+                                    </option>
+                                  );
+                                })}
+                              </select>
                             ) : (
                               <input
                                 {...item}
-                                onChange={(e) => {
-                                  handleInputChange(e, handleChange);
-                                }}
+                                onChange={handleChange}
                                 onBlur={handleBlur}
                                 value={values[item.name]}
                                 className='block w-1/2 px-4 text-white py-2 mt-2 text-sm placeholder-gray-600 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50'
@@ -218,60 +230,10 @@ export default function Watchlist({ user }) {
           isFormOpen
             ? 'bg-transparent border border-indigo-600'
             : 'bg-indigo-600'
-        } py-2 px-2 rounded-lg hover:bg-indigo-400 text-white`}
+        } py-2 px-2 rounded-lg w-full my-4 hover:bg-indigo-400 text-white`}
       >
         {isFormOpen ? 'Close' : 'Add new'}
       </button>
-      <div className='flex gap-6 grid-cols-1 sm:grid-cols-3 grid grid-row-1'>
-        {watchlist &&
-          watchlist.map((stat, idx) => {
-            return (
-              <div
-                key={idx}
-                className='flex flex-col p-4 w-full bg-gray-900 rounded-lg gap-y-3'
-              >
-                <div className='flex items-center gap-x-3'>
-                  <div className='p-2 bg-gray-800 flex justify-center items-center w-full rounded-lg'>
-                    <img src={stat.image} />
-                  </div>
-
-                  <div className={`p-0.5 rounded-full bg-accent-green/20`}>
-                    {/* {stat.status === 'up' ? (
-                    <span className='fill-current text-accent-green'>up</span>
-                  ) : (
-                    <span className='fill-current text-accent-red'>dw</span>
-                  )} */}
-                  </div>
-                </div>
-                <div className='text-xl font-semibold text-white'>
-                  {stat.name}
-                </div>
-                <div className='text-lg flex justify-between items-center tracking-wide text-gray-100'>
-                  <span>Floor price</span>
-                  <span className='font-bold'>{stat.stats.floor_price}</span>
-                </div>
-                <div className='text-lg flex justify-between items-center tracking-wide text-gray-100'>
-                  <span>Market Cap</span>
-                  <span className='font-bold'>
-                    {(stat.stats.market_cap / 10000).toFixed(1)}
-                  </span>
-                </div>
-                <div className='text-lg flex justify-between items-center tracking-wide text-gray-100'>
-                  <span>Avg. Price</span>
-                  <span className='font-bold'>
-                    {stat.stats.average_price.toFixed(1)}
-                  </span>
-                </div>
-                <div className='text-lg flex justify-between items-center tracking-wide text-gray-100'>
-                  <span>Volume</span>
-                  <span className='font-bold'>
-                    {(stat.stats.total_volume / 1000).toFixed(1)}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-      </div>
-    </>
+    </div>
   );
 }

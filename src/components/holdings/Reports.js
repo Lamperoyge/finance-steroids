@@ -9,9 +9,9 @@ export default function Reports() {
 
   const totalPages = Math.ceil(syncWallets.length / 8);
 
-  useEffect(() => {
-    setData(syncWallets.slice(page, page + 8));
-  }, [page]);
+  // useEffect(() => {
+  //   setData(syncWallets.slice(page, page + 8));
+  // }, [page]);
 
   const handlePagination = (type) => {
     switch (type) {
@@ -44,7 +44,7 @@ export default function Reports() {
           </tr>
         </thead>
         <tbody>
-          {data.map((order, idx) => {
+          {syncWallets.map((order, idx) => {
             let img = '/favicon.png';
             const metadata = JSON.parse(order.metadata);
             if (metadata && metadata.image)

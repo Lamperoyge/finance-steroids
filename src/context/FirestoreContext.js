@@ -1,7 +1,13 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 const FirestoreContext = createContext({});
-import { ADD_USER_WALLETS, ADD_USER_WATCHLIST } from './firestore.types';
+import {
+  ADD_USER_WALLETS,
+  ADD_USER_WATCHLIST,
+  ADD_ALERT,
+} from './firestore.types';
 import { db } from 'utils/firebase-config';
+import { getUserAlerts } from 'services/firestore';
+
 import {
   doc,
   addDoc,
@@ -28,6 +34,7 @@ import axios from 'axios';
 const INITIAL_STATE = {
   wallets: [],
   watchlist: [],
+  alerts: [],
 };
 
 const reducer = function (state, { type, payload }) {
@@ -41,6 +48,11 @@ const reducer = function (state, { type, payload }) {
       return {
         ...state,
         watchlist: payload,
+      };
+    case ADD_ALERT:
+      return {
+        ...state,
+        alerts: payload,
       };
     default:
       return { ...state };
@@ -64,6 +76,9 @@ export const FirestoreProvider = ({ children }) => {
     };
     let unsub;
     if (firestoreUser && firestoreUser.id) {
+      getUserAlerts(firestoreUser.id).then((res) =>
+        dispatch({ type: ADD_ALERT, payload: res })
+      );
       unsub = getUserWallets();
     }
     if (unsub && typeof unsub === 'function') return () => unsub();
@@ -71,6 +86,10 @@ export const FirestoreProvider = ({ children }) => {
 
   const addToWatchlist = (items) => {
     dispatch({ type: ADD_USER_WATCHLIST, payload: items });
+  };
+
+  const addAlert = (item) => {
+    dispatch({ type: ADD_ALERT, payload: [...state.alerts, item] });
   };
 
   const timestampToMinutes = (timestamp) => {
@@ -99,7 +118,6 @@ export const FirestoreProvider = ({ children }) => {
             slug: dataItem.slug,
           });
           if (data.stats) {
-            debugger;
             const ref = doc(db, 'collections', dataItem.token_address);
             await updateDoc(ref, {
               stats: data.stats,
@@ -117,6 +135,11 @@ export const FirestoreProvider = ({ children }) => {
     });
   };
 
+  const deleteUserAlert = (id) =>
+    dispatch({
+      type: ADD_ALERT,
+      payload: state.alerts.filter((i) => i.id !== id),
+    });
   useEffect(async () => {
     if (firestoreUser && firestoreUser.collections) {
       fetchCollections();
@@ -162,6 +185,9 @@ export const FirestoreProvider = ({ children }) => {
         watchlist: state.watchlist,
         fetchCollections,
         addToWatchlist,
+        alerts: state.alerts,
+        addUserAlert: addAlert,
+        deleteUserAlert,
       }}
     >
       {children}

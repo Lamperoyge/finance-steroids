@@ -8,6 +8,10 @@ import {
   updateDoc,
   arrayUnion,
   serverTimestamp,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
 } from 'firebase/firestore';
 
 export const addUserWallet = async (uid, publicKey) => {
@@ -37,7 +41,63 @@ export const addCollection = async (obj, uid) => {
   }
 };
 
+export const addAlert = async (obj, user) => {
+  try {
+    await addDoc(collection(db, 'alerts'), {
+      token_address: obj.watchlist,
+      user: user.id,
+      user_email: user.email,
+      active: true,
+      ...obj,
+      created: serverTimestamp(),
+      updated: serverTimestamp(),
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const getUserWallets = async (uid) => {
   try {
   } catch (error) {}
+};
+
+export const getUserAlerts = async (uid) => {
+  try {
+    const q = query(collection(db, 'alerts'), where('user', '==', uid));
+    const querySnapshot = await getDocs(q);
+    let queryMap = [];
+    querySnapshot.forEach((i) =>
+      queryMap.push({
+        id: i.id,
+        ...i.data(),
+      })
+    );
+    console.log(queryMap);
+    return queryMap;
+  } catch (error) {
+    alert('Woops! Something is wrong');
+    console.log(error, 'error');
+  }
+};
+
+export const deleteAlert = async (id) => {
+  try {
+    const result = await deleteDoc(doc(db, 'alerts', id));
+    return result;
+  } catch (error) {
+    alert('Woops! Something went wrong deleting document');
+    console.log(error);
+  }
+};
+
+export const updateUserAlert = async (id, changes) => {
+  try {
+    const ref = doc(db, 'alerts', id);
+    const result = await updateDoc(ref, changes);
+    return result;
+  } catch (error) {
+    alert('Woops! Something went wrong deleting document');
+    console.log(error);
+  }
 };

@@ -19,7 +19,7 @@ import { useAuth } from 'context/AuthContext';
 const menus = [
   { name: 'Dashboard', icon: faChartBar, link: '/home' },
   { name: 'Watchlist', icon: faRectangleList, link: '/watchlist' },
-  { name: 'Portfolio', icon: faFileLines, link: '/portfolio' },
+  { name: 'Alerts', icon: faFileLines, link: '/alerts' },
   { name: 'Wallets', icon: faRotate, link: '/wallets' },
   { name: 'Logout', icon: faXmark, action: 'logout' },
 ];
