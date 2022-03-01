@@ -7,7 +7,7 @@ import {
 } from './firestore.types';
 import { db } from 'utils/firebase-config';
 import { getUserAlerts } from 'services/firestore';
-
+import { getStats } from 'utils/opensea';
 import {
   doc,
   addDoc,
@@ -114,13 +114,15 @@ export const FirestoreProvider = ({ children }) => {
           timestampToMinutes(updatedDate.toMillis());
         if (diff > 30) {
           //update stats
-          const { data } = await axios.post('/api/update-stats', {
-            slug: dataItem.slug,
-          });
+          const data = await getStats(dataItem.slug);
+          console.log(data, '====data');
           if (data.stats) {
             const ref = doc(db, 'collections', dataItem.token_address);
             await updateDoc(ref, {
               stats: data.stats,
+              market_cap: data.stats.market_cap,
+              average_price: data.stats.average_price,
+              floor_price: data.stats.floor_price,
               updated: serverTimestamp(),
             });
             dataItem.stats = data.stats;

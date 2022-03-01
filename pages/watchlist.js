@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { addCollection } from 'services/firestore';
+import { searchNFTsBySlug, searchNFTsByAddress } from 'utils/opensea';
 const validationSchema = Yup.object({
   collection: Yup.string().min(2),
   contract: Yup.string().min(20),
@@ -54,17 +55,16 @@ export default function Watchlist({ user }) {
 
   const searchByContract = async (contract) => {
     try {
-      const { data } = await axios.post('/api/search-contract', {
-        address: contract,
-      });
-
-      if (data.data) {
+      const data = await searchNFTsByAddress(contract);
+      if (data.collection) {
         setCollection({
-          image: data.data.collection.image_url,
-          token_address:
-            data.data.collection.primary_asset_contracts[0].address,
-          name: data.data.collection.primary_asset_contracts[0].name,
-          ...data.data.collection,
+          image: data.collection.image_url,
+          token_address: data.address,
+          market_cap: data.stats.market_cap,
+          average_price: data.stats.average_price,
+          floor_price: data.stats.floor_price,
+          stats: data.stats,
+          ...data.collection,
         });
       }
     } catch (error) {
@@ -74,9 +74,7 @@ export default function Watchlist({ user }) {
 
   const searchByOpensea = async (value) => {
     try {
-      const { data } = await axios.post('/api/get-opensea-collection', {
-        slug: value.split('/collection/').pop(),
-      });
+      const data = await searchNFTsBySlug(value.split('/collection/').pop());
       if (data.data) {
         setCollection({
           image: data.data.collection.image_url,
@@ -84,6 +82,9 @@ export default function Watchlist({ user }) {
             data.data.collection.primary_asset_contracts[0].address,
           name: data.data.collection.primary_asset_contracts[0].name,
           ...data.data.collection,
+          market_cap: data.data.collection.stats.market_cap,
+          average_price: data.data.collection.stats.average_price,
+          floor_price: data.data.collection.stats.floor_price,
         });
       }
     } catch (error) {

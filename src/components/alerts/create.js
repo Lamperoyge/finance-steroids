@@ -3,6 +3,8 @@ import * as Yup from 'yup';
 import { useState } from 'react';
 import { addCollection, addAlert } from 'services/firestore';
 import { useAuth } from 'context/AuthContext';
+import { searchNFTsBySlug, searchNFTsByAddress } from 'utils/opensea';
+
 const validationSchema = Yup.object({
   watchlist: Yup.string().min(2),
   openSea: Yup.string().min(30),
@@ -53,9 +55,7 @@ export default function CreateAlert() {
 
   const searchByOpensea = async (value) => {
     try {
-      const { data } = await axios.post('/api/get-opensea-collection', {
-        slug: value.split('/collection/').pop(),
-      });
+      const data = await searchNFTsBySlug(value.split('/collection/').pop());
       if (data.data) {
         setCollection({
           image: data.data.collection.image_url,
@@ -63,6 +63,9 @@ export default function CreateAlert() {
             data.data.collection.primary_asset_contracts[0].address,
           name: data.data.collection.primary_asset_contracts[0].name,
           ...data.data.collection,
+          market_cap: data.data.collection.stats.market_cap,
+          average_price: data.data.collection.stats.average_price,
+          floor_price: data.data.collection.stats.floor_price,
         });
       }
     } catch (error) {
