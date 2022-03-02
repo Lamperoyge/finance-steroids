@@ -17,8 +17,8 @@ const config = [
 
 const buttonsConfig = [
   {
-    title: 'Get started',
-    link: '/#join',
+    title: 'Sign in',
+    link: '/sign-in',
   },
 ];
 

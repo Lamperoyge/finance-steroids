@@ -3,8 +3,6 @@ import { db } from 'utils/firebase-config';
 import { collection, addDoc, onSnapshot } from 'firebase/firestore';
 
 export async function createCheckoutSession(uid, price) {
-  console.log(uid);
-
   const checkoutSessionRef = await addDoc(
     collection(db, 'users', uid, 'checkout_sessions'),
     {

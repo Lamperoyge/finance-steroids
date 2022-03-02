@@ -8,12 +8,10 @@ const whitelistedPages = ['/sign-up', '/sign-in'];
 export default function withAuth(Component) {
   function WrappedComponent(props) {
     const { isAuthenticated, user, loading, firestoreUser, logout } = useAuth();
-    const [isRoleLoading, userStatus] = useUserRole(user);
-
     const router = useRouter();
+    const [isRoleLoading, userStatus] = useUserRole();
 
     const activeLoaders = loading || isRoleLoading;
-
     if (activeLoaders) {
       return <Spinner />;
     }
@@ -28,16 +26,15 @@ export default function withAuth(Component) {
       router.replace('/sign-in');
       return null;
     }
-    if (
-      !userStatus &&
-      !activeLoaders &&
-      isAuthenticated &&
-      router.route !== '/plans'
-    ) {
-      debugger;
-      router.replace('/plans');
-      return null;
-    }
+    // if (
+    //   !userStatus &&
+    //   !activeLoaders &&
+    //   isAuthenticated &&
+    //   router.route !== '/plans'
+    // ) {
+    //   router.replace('/plans');
+    //   return null;
+    // }
 
     return <Component user={user} firestoreUser={firestoreUser} {...props} />;
   }

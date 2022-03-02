@@ -1,0 +1,3 @@
+export const ADD_USER_WALLETS = 'ADD_USER_WALLETS';
+export const ADD_USER_WATCHLIST = 'ADD_USER_WATCHLIST';
+export const ADD_ALERT = 'ADD_ALERT';

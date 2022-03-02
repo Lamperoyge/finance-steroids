@@ -1,6 +1,5 @@
 import '../styles/globals.css';
 import 'tailwindcss/tailwind.css';
-import { wrapper } from 'redux/store';
 import { AuthProvider } from 'context/AuthContext';
 import { useEffect } from 'react';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -8,6 +7,17 @@ import TagManager from 'react-gtm-module';
 import { hotjar } from 'react-hotjar';
 import Head from 'next/head';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // import Font Awesome CSS
+import { FirestoreProvider } from 'context/FirestoreContext';
+import SidebarLayout from 'components/layout/SidebarLayout';
+import { useRouter } from 'next/router';
+import { getDefaultProvider } from 'ethers';
+import { NftProvider, useNft } from 'use-nft';
+
+// We are using the "ethers" fetcher here.
+const ethersConfig = {
+  provider: getDefaultProvider('homestead'),
+};
+
 config.autoAddCss = false;
 
 const tagManagerArgs = {
@@ -15,11 +25,27 @@ const tagManagerArgs = {
 };
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   useEffect(() => {
-    TagManager.initialize(tagManagerArgs);
-    hotjar.initialize(2829018, 6);
+    if (process.env.NEXT_PUBLIC_NODE_ENV !== 'development') {
+      hotjar.initialize(2829018, 6);
+      TagManager.initialize(tagManagerArgs);
+    }
   }, []);
 
+  const noLayoutPages = ['/', '/plans', '/sign-in', '/sign-up'];
+  const Element = () => {
+    if (noLayoutPages.includes(router.pathname)) {
+      return <Component {...pageProps} />;
+    }
+    return (
+      <SidebarLayout>
+        <NftProvider fetcher={['ethers', ethersConfig]}>
+          <Component {...pageProps} />
+        </NftProvider>
+      </SidebarLayout>
+    );
+  };
   return (
     <AuthProvider>
       <Head>
@@ -42,9 +68,11 @@ function MyApp({ Component, pageProps }) {
         <meta name='twitter:image' content={'/test1.svg'} />
         <meta name='image' content={'/test1.svg'} />
       </Head>
-      <Component {...pageProps} />
+      <FirestoreProvider>
+        <Element />
+      </FirestoreProvider>
     </AuthProvider>
   );
 }
 
-export default wrapper.withRedux(MyApp);
+export default MyApp;

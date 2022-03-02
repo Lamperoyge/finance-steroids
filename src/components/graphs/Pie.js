@@ -1,3 +1,9 @@
-export default function Pie() {
-  return null;
+import React from 'react';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+export default function Pie(props) {
+  return <Doughnut options={{ response: true }} data={props.pieData} />;
 }
