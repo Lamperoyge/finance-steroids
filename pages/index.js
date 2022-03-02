@@ -64,7 +64,7 @@ export default function Home() {
                   </h1>
                 </>
               )}
-              {!isEmailSent && (
+              {/* {!isEmailSent && (
                 <div className='w-full sm:w-1/2'>
                   <input
                     className='py-2.5 px-4 mb-4 w-full bg-gray-50 border focus:ring-2 focus:ring-opacity-90 focus:ring-indigo-500 border-gray-300 rounded focus:outline-none'
@@ -85,11 +85,19 @@ export default function Home() {
                       onClick={handleEmail}
                       className='relative self-start inline-block w-auto px-8 py-4 mx-auto mt-0 font-bold text-white bg-indigo-600 border-t border-gray-200 rounded-md shadow-xl sm:mt-1 fold-bold lg:mx-0'
                     >
-                      Join the waitlist!
+                      Join now!
                     </button>
                   </div>
                 </div>
-              )}
+              )} */}
+              <Link href='/sign-up'>
+                <button
+                  type='button'
+                  className='relative self-start inline-block w-auto px-8 py-4 mx-auto mt-0 font-bold text-white bg-indigo-600 border-t border-gray-200 rounded-md shadow-xl sm:mt-1 fold-bold lg:mx-0'
+                >
+                  Join now!
+                </button>
+              </Link>
               <div className='flex-col hidden mt-12 lg:mt-24'>
                 <p className='mb-4 text-sm font-medium tracking-widest text-gray-500 uppercase'>
                   Integrates With
@@ -282,7 +290,15 @@ export default function Home() {
             Take control of your NFT investments with Floordle.
           </p>
           <div className='flex flex-col justify-center w-full mt-5 space-y-3 sm:space-x-3 sm:space-y-0 sm:flex-row lg:mt-8'>
-            {!isEmailSent && (
+            <Link href='/sign-up'>
+              <button
+                type='button'
+                className='relative self-center inline-block w-auto px-8 py-4 mx-auto mt-0 font-bold text-white bg-indigo-600 border-t border-gray-200 rounded-md shadow-xl sm:mt-1 fold-bold lg:mx-0'
+              >
+                Join now!
+              </button>
+            </Link>
+            {/* {!isEmailSent && (
               <div className='w-full sm:w-1/2'>
                 <input
                   className='py-2.5 px-4 mb-4 w-full bg-gray-50 border focus:ring-2 focus:ring-opacity-90 focus:ring-indigo-500 border-gray-300 rounded focus:outline-none'
@@ -307,7 +323,7 @@ export default function Home() {
                   </button>
                 </div>
               </div>
-            )}{' '}
+            )}{' '} */}
           </div>
         </div>
       </section>
@@ -491,7 +507,7 @@ export default function Home() {
                 Personal Plus
               </h3>
               <div className='flex items-end mt-6 leading-7 text-gray-900 border-0 border-gray-200'>
-                <p className='box-border m-0 text-6xl font-semibold leading-none border-solid'>
+                <p className='line-through box-border m-0 text-6xl font-semibold leading-none border-solid'>
                   $14.99
                 </p>
                 <p
@@ -501,6 +517,7 @@ export default function Home() {
                   / month
                 </p>
               </div>
+              <span className='font-semibold'>FREE while in Beta</span>
               <p className='mt-6 mb-5 leading-normal text-left text-gray-900 border-0 border-gray-200'>
                 The most powerful analytic tool in NFT market.
               </p>
@@ -537,7 +554,7 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Insights
+                  Insights - WIP
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
@@ -605,12 +622,12 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Weekly Summary
+                  Weekly Summary - WIP
                 </li>
               </ul>
-              <Link href='/#join'>
+              <Link href='/sign-up'>
                 <button className='inline-flex justify-center w-full px-4 py-3 mt-8 font-sans text-sm leading-none text-center text-white no-underline bg-indigo-600 border rounded-md cursor-pointer hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:md:text-lg'>
-                  Join the waiting list
+                  Join now!
                 </button>
               </Link>
             </div>
@@ -659,7 +676,7 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  Insights
+                  Insights - WIP
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
@@ -734,7 +751,7 @@ export default function Home() {
                 your favourite NFTs!
               </p>
             </div>
-            <Link href={'/#join'}>
+            <Link href={'/sign-up'}>
               <a
                 href='#_'
                 className='inline-flex items-center justify-center w-full px-5 py-4 mt-6 ml-0 font-sans leading-none text-white no-underline bg-indigo-600 border border-indigo-600 border-solid rounded cursor-pointer md:w-auto lg:mt-0 hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:text-lg lg:ml-6 md:text-xl'

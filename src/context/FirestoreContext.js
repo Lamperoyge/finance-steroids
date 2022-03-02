@@ -115,7 +115,6 @@ export const FirestoreProvider = ({ children }) => {
         if (diff > 30) {
           //update stats
           const data = await getStats(dataItem.slug);
-          console.log(data, '====data');
           if (data.stats) {
             const ref = doc(db, 'collections', dataItem.token_address);
             await updateDoc(ref, {
