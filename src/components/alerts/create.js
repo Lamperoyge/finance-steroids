@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { addCollection, addAlert } from 'services/firestore';
 import { useAuth } from 'context/AuthContext';
 import { searchNFTsBySlug, searchNFTsByAddress } from 'utils/opensea';
+import useUserRole from 'hooks/useUserRole';
+import Link from 'next/link';
 
 const validationSchema = Yup.object({
   watchlist: Yup.string().min(2),
@@ -18,19 +20,11 @@ export default function CreateAlert() {
   const [error, setError] = useState('');
   const [collection, setCollection] = useState(null);
   const { firestoreUser } = useAuth();
-  const { watchlist, addToWatchlist, addUserAlert } = useFirestore();
+  const { watchlist, addToWatchlist, addUserAlert, alerts } = useFirestore();
+  const [_, userStatus] = useUserRole();
 
   const handleSubmit = (values) => {
     if (values.openSea) {
-      const valuesLength = Object.values(values).filter((i) => i).length;
-      if (valuesLength === 0) {
-        setError('You need to choose at least one option');
-        return;
-      }
-      if (valuesLength > 1) {
-        setError('You need to choose only one option');
-        return;
-      }
       try {
         addCollection(collection, firestoreUser.id);
         addToWatchlist([...watchlist, collection]);
@@ -126,7 +120,7 @@ export default function CreateAlert() {
           }) => {
             return (
               <form onSubmit={handleSubmit}>
-                <div className='flex items-center'>
+                <div className='flex items-center flex-col sm:flex-row'>
                   <div className='w-full'>
                     {formConfig.map((item, idx) => {
                       return (
@@ -224,19 +218,29 @@ export default function CreateAlert() {
           }}
         </Formik>
       )}
-      <button
-        onClick={() => {
-          setFormOpen(!isFormOpen);
-          setCollection(null);
-        }}
-        className={`${
-          isFormOpen
-            ? 'bg-transparent border border-indigo-600'
-            : 'bg-indigo-600'
-        } py-2 px-2 rounded-lg w-full my-4 hover:bg-indigo-400 text-white`}
-      >
-        {isFormOpen ? 'Close' : 'Add new'}
-      </button>
+      {!userStatus && alerts && alerts.length > 0 ? (
+        <Link href='/plans' passHref>
+          <a
+            className={`block font-semibold text-center bg-indigo-600 py-2 px-2 rounded-lg w-full my-4 hover:bg-indigo-400 text-white`}
+          >
+            Upgrade to add more alerts
+          </a>
+        </Link>
+      ) : (
+        <button
+          onClick={() => {
+            setFormOpen(!isFormOpen);
+            setCollection(null);
+          }}
+          className={`${
+            isFormOpen
+              ? 'bg-transparent border border-indigo-600'
+              : 'bg-indigo-600'
+          } py-2 px-2 rounded-lg w-full my-4 hover:bg-indigo-400 text-white`}
+        >
+          {isFormOpen ? 'Close' : 'Add new'}
+        </button>
+      )}
     </div>
   );
 }

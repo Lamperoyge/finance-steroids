@@ -17,7 +17,7 @@ export default function StatsCard() {
   return (
     <>
       <h1 className='text-3xl font-semibold leading-loose text-white'>Stats</h1>
-      <div className='flex gap-6'>
+      <div className='flex gap-6 flex-col sm:flex-row'>
         {!watchlist.length && (
           <div className='text-gray-400'>
             <span>

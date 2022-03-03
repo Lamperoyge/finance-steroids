@@ -7,8 +7,9 @@ export async function createCheckoutSession(uid, price) {
     collection(db, 'users', uid, 'checkout_sessions'),
     {
       price: price,
-      success_url: window.location.origin,
-      cancel_url: window.location.origin,
+      success_url: window.location.origin + '/home',
+      cancel_url: window.location.origin + '/plans',
+      trial_period_days: 14,
     }
   );
 

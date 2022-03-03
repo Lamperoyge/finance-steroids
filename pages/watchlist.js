@@ -1,24 +1,13 @@
-import withAuth from 'hocs/withAuth';
-import { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
+import { useState } from 'react';
 import { useAuth } from 'context/AuthContext';
 import { useFirestore } from 'context/FirestoreContext';
-
-import {
-  faChartBar,
-  faRotate,
-  faCoins,
-  faRectangleList,
-  faBell,
-  faFileLines,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { addCollection } from 'services/firestore';
 import { searchNFTsBySlug, searchNFTsByAddress } from 'utils/opensea';
+import useUserRole from 'hooks/useUserRole';
+import Link from 'next/link';
+
 const validationSchema = Yup.object({
   collection: Yup.string().min(2),
   contract: Yup.string().min(20),
@@ -31,6 +20,7 @@ export default function Watchlist({ user }) {
   const [collection, setCollection] = useState(null);
   const { firestoreUser } = useAuth();
   const { watchlist, addToWatchlist } = useFirestore();
+  const [_, userStatus] = useUserRole();
 
   const handleSubmit = (values) => {
     const valuesLength = Object.values(values).filter((i) => i).length;
@@ -114,6 +104,7 @@ export default function Watchlist({ user }) {
     handleChange(e);
   };
 
+  console.log(userStatus);
   return (
     <>
       {isFormOpen && (
@@ -210,19 +201,29 @@ export default function Watchlist({ user }) {
           }}
         </Formik>
       )}
-      <button
-        onClick={() => {
-          setFormOpen(!isFormOpen);
-          setCollection(null);
-        }}
-        className={`${
-          isFormOpen
-            ? 'bg-transparent border border-indigo-600'
-            : 'bg-indigo-600'
-        } py-2 px-2 rounded-lg hover:bg-indigo-400 text-white`}
-      >
-        {isFormOpen ? 'Close' : 'Add new'}
-      </button>
+      {!userStatus && watchlist && watchlist.length > 2 ? (
+        <Link href='/plans' passHref>
+          <a
+            className={`text-center font-semibold bg-indigo-600 py-2 px-2 rounded-lg hover:bg-indigo-400 text-white`}
+          >
+            Upgrade to add more collections
+          </a>
+        </Link>
+      ) : (
+        <button
+          onClick={() => {
+            setFormOpen(!isFormOpen);
+            setCollection(null);
+          }}
+          className={`${
+            isFormOpen
+              ? 'bg-transparent border border-indigo-600'
+              : 'bg-indigo-600'
+          } py-2 px-2 rounded-lg hover:bg-indigo-400 text-white`}
+        >
+          {isFormOpen ? 'Close' : 'Add new'}
+        </button>
+      )}
       <div className='flex gap-6 grid-cols-1 sm:grid-cols-3 grid grid-row-1'>
         {watchlist &&
           watchlist.map((stat, idx) => {
