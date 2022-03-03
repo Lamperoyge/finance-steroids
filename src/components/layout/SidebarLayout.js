@@ -20,7 +20,8 @@ const menus = [
   { name: 'Dashboard', icon: faChartBar, link: '/home' },
   { name: 'Watchlist', icon: faRectangleList, link: '/watchlist' },
   { name: 'Alerts', icon: faFileLines, link: '/alerts' },
-  { name: 'Plans', icon: faRotate, link: '/plans' },
+  { name: 'Plans', icon: faCoins, link: '/plans' },
+  { name: 'Wallets', icon: faRotate, link: '/wallets' },
   { name: 'Logout', icon: faXmark, action: 'logout' },
 ];
 
@@ -112,6 +113,7 @@ const routesToTitleMap = {
   '/watchlist': 'Watchlist',
   '/portfolio': 'Portfolio',
   '/wallets': 'Wallets',
+  '/alerts': 'Alerts',
 };
 
 function SidebarLayout({ children }) {

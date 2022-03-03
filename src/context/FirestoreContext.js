@@ -96,6 +96,7 @@ export const FirestoreProvider = ({ children }) => {
     return Math.floor(timestamp / 60000);
   };
 
+  console.log(state.wallets);
   const fetchCollections = async () => {
     const q = query(
       collection(db, 'collections'),
@@ -142,7 +143,11 @@ export const FirestoreProvider = ({ children }) => {
       payload: state.alerts.filter((i) => i.id !== id),
     });
   useEffect(async () => {
-    if (firestoreUser && firestoreUser.collections) {
+    if (
+      firestoreUser &&
+      firestoreUser.collections &&
+      firestoreUser.collections.length
+    ) {
       fetchCollections();
     }
   }, [firestoreUser]);

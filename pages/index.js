@@ -399,7 +399,7 @@ export default function Home() {
                 </div>
                 <p className='font-bold text-gray-700'>Price Floor</p>
                 <p className='text-sm leading-5 text-gray-500'>
-                  Get the price floor data on your collections & watchlists.{' '}
+                  Get all the data on your collections
                   <br />
                 </p>
               </div>
@@ -507,7 +507,7 @@ export default function Home() {
                 Personal Plus
               </h3>
               <div className='flex items-end mt-6 leading-7 text-gray-900 border-0 border-gray-200'>
-                <p className='line-through box-border m-0 text-6xl font-semibold leading-none border-solid'>
+                <p className='box-border m-0 text-6xl font-semibold leading-none border-solid'>
                   $14.99
                 </p>
                 <p
@@ -517,9 +517,9 @@ export default function Home() {
                   / month
                 </p>
               </div>
-              <span className='font-semibold'>FREE while in Beta</span>
+              <span className='font-semibold'>Free trial for 14 days</span>
               <p className='mt-6 mb-5 leading-normal text-left text-gray-900 border-0 border-gray-200'>
-                The most powerful analytic tool in NFT market.
+                The most powerful analytic tool in the NFT market.
               </p>
               <ul className='flex-1 p-0 mt-4 leading-7 text-gray-900 border-0 border-gray-200'>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
@@ -539,23 +539,7 @@ export default function Home() {
                   </svg>
                   Unlimited collections
                 </li>
-                <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
-                  <svg
-                    className='w-5 h-5 mr-2 font-semibold leading-7 text-indigo-600 sm:h-5 sm:w-5 md:h-6 md:w-6'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth='2'
-                      d='M5 13l4 4L19 7'
-                    ></path>
-                  </svg>
-                  Insights - WIP
-                </li>
+
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
                     className='w-5 h-5 mr-2 font-semibold leading-7 text-indigo-600 sm:h-5 sm:w-5 md:h-6 md:w-6'
@@ -624,6 +608,23 @@ export default function Home() {
                   </svg>
                   Weekly Summary - WIP
                 </li>
+                <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
+                  <svg
+                    className='w-5 h-5 mr-2 font-semibold leading-7 text-indigo-600 sm:h-5 sm:w-5 md:h-6 md:w-6'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      d='M5 13l4 4L19 7'
+                    ></path>
+                  </svg>
+                  Insights - WIP
+                </li>
               </ul>
               <Link href='/sign-up'>
                 <button className='inline-flex justify-center w-full px-4 py-3 mt-8 font-sans text-sm leading-none text-center text-white no-underline bg-indigo-600 border rounded-md cursor-pointer hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:md:text-lg'>
@@ -661,23 +662,7 @@ export default function Home() {
                   </svg>
                   3 collections
                 </li>
-                <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
-                  <svg
-                    className='w-5 h-5 mr-2 font-semibold leading-7 text-indigo-600 sm:h-5 sm:w-5 md:h-6 md:w-6'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth='2'
-                      d='M5 13l4 4L19 7'
-                    ></path>
-                  </svg>
-                  Insights - WIP
-                </li>
+
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
                     className='w-5 h-5 mr-2 font-semibold leading-7 text-indigo-600 sm:h-5 sm:w-5 md:h-6 md:w-6'
@@ -711,6 +696,23 @@ export default function Home() {
                     ></path>
                   </svg>
                   1 Watchlist
+                </li>
+                <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
+                  <svg
+                    className='w-5 h-5 mr-2 font-semibold leading-7 text-indigo-600 sm:h-5 sm:w-5 md:h-6 md:w-6'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth='2'
+                      d='M5 13l4 4L19 7'
+                    ></path>
+                  </svg>
+                  Insights - WIP
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <FontAwesomeIcon
