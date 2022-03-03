@@ -10,8 +10,8 @@ import Link from 'next/link';
 const validationSchema = Yup.object({
   watchlist: Yup.string().min(2),
   openSea: Yup.string().min(30),
-  alertType: Yup.string().required('Please select what kind of alert you want'),
-  target: Yup.number().required(),
+  alertType: Yup.string().required('Select the indicator to follow'),
+  target: Yup.string().required(),
 });
 
 import { useFirestore } from 'context/FirestoreContext';
@@ -33,18 +33,24 @@ export default function CreateAlert() {
         alert('Woops! Something went wrong');
       }
     }
-    addAlert(
-      { ...values, target: Number(values.target), slug: collection.name },
-      firestoreUser
-    );
-    addUserAlert({
-      ...values,
-      slug: collection.name,
-      target: Number(values.target),
-      active: true,
-    });
-    setCollection(null);
-    setFormOpen(false);
+    const target = values.target.includes(',')
+      ? parseFloat(values.target.split(',').join('.'))
+      : parseFloat(values.target);
+
+    if (target !== NaN && collection) {
+      addAlert(
+        { ...values, target: target, slug: collection.name },
+        firestoreUser
+      );
+      addUserAlert({
+        ...values,
+        slug: collection.name,
+        target: target,
+        active: true,
+      });
+      setCollection(null);
+      setFormOpen(false);
+    }
   };
 
   const searchByOpensea = async (value) => {
@@ -85,7 +91,7 @@ export default function CreateAlert() {
     },
     {
       type: 'select',
-      label: 'Select alert type',
+      label: 'Select indicator to follow',
       name: 'alertType',
       data: [
         { slug: 'market_cap', name: 'Market Cap' },
@@ -147,7 +153,7 @@ export default function CreateAlert() {
                                 onBlur={handleBlur}
                                 className='block w-1/2 px-4 text-white py-2 mt-2 text-sm placeholder-gray-600 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50'
                               >
-                                <option value=''>Select a collection</option>
+                                <option value=''>Select...</option>
                                 {item.data.map((option, idx) => {
                                   return (
                                     <option

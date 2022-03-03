@@ -12,16 +12,28 @@ import {
   query,
   where,
   deleteDoc,
+  arrayRemove,
 } from 'firebase/firestore';
 
-export const addUserWallet = async (uid, publicKey) => {
+// export const addUserWallet = async (uid, publicKey) => {
+//   try {
+//     const walletRef = await setDoc(doc(db, 'wallets', uid), {
+//       publicKey,
+//     });
+//     return walletRef;
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+// };
+
+export const deleteUserWallet = async (wallet, uid) => {
   try {
-    const walletRef = await setDoc(doc(db, 'wallets', uid), {
-      publicKey,
+    await updateDoc(doc(db, 'wallets', uid), {
+      linkedWallets: arrayRemove(wallet),
     });
-    return walletRef;
   } catch (error) {
-    throw new Error(error);
+    console.log(error);
+    alert("Woops! We weren't able to unsync this wallet");
   }
 };
 
@@ -88,6 +100,17 @@ export const deleteAlert = async (id) => {
   } catch (error) {
     alert('Woops! Something went wrong deleting document');
     console.log(error);
+  }
+};
+
+export const deleteCollectionFromUserWatchlist = async (id, uid) => {
+  try {
+    await updateDoc(doc(db, 'users', uid), {
+      collections: arrayRemove(id),
+    });
+  } catch (error) {
+    console.log(error);
+    alert('Woops! Something went wrong delete collection from watchlist');
   }
 };
 

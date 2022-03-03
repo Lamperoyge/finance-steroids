@@ -3,7 +3,10 @@ import { useAuth } from 'context/AuthContext';
 import { useFirestore } from 'context/FirestoreContext';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { addCollection } from 'services/firestore';
+import {
+  addCollection,
+  deleteCollectionFromUserWatchlist,
+} from 'services/firestore';
 import { searchNFTsBySlug, searchNFTsByAddress } from 'utils/opensea';
 import useUserRole from 'hooks/useUserRole';
 import Link from 'next/link';
@@ -104,7 +107,11 @@ export default function Watchlist({ user }) {
     handleChange(e);
   };
 
-  console.log(userStatus);
+  const deleteCollectionFromWatchlist = async (id) => {
+    console.log(id);
+    deleteCollectionFromUserWatchlist(id, firestoreUser.id);
+    addToWatchlist(watchlist.filter((i) => i.token_address !== id));
+  };
   return (
     <>
       {isFormOpen && (
@@ -270,6 +277,15 @@ export default function Watchlist({ user }) {
                     {(stat.stats.total_volume / 1000).toFixed(1)}
                   </span>
                 </div>
+                <button
+                  type='button'
+                  onClick={() =>
+                    deleteCollectionFromWatchlist(stat.token_address)
+                  }
+                  className='bg-indigo-600 text-white border-indigo-600 border py-1 px-2 rounded-lg hover:bg-transparent hover:border-red-400 hover:text-red-400'
+                >
+                  Delete
+                </button>
               </div>
             );
           })}

@@ -4,9 +4,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import useUserRole from 'hooks/useUserRole';
 import { collection, setDoc, doc, getDocs, query } from 'firebase/firestore';
-import { db } from 'utils/firebase-config';
+import { db, functions } from 'utils/firebase-config';
+import { httpsCallable } from 'firebase/functions';
+import { useRouter } from 'next/router';
+import Spinner from 'components/ui/Spinner';
 
 function Plans({ firestoreUser }) {
+  const router = useRouter();
   const plans = [
     {
       id: 'price_1KS55QLaJUYuY17381reKDqb',
@@ -39,23 +43,27 @@ function Plans({ firestoreUser }) {
   ];
 
   const [plan, setPlan] = useState(plans[0]);
-
-  const handleSubscription = () =>
+  const [isLoading, setIsLoading] = useState(false);
+  const handleSubscription = () => {
+    setIsLoading(true);
     createCheckoutSession(firestoreUser.id, plan.id);
+  };
 
-  console.log(firestoreUser);
   const cancelSubscription = async () => {
-    const q = query(collection(db, `users/${firestoreUser.id}/subscriptions`));
-    const docSnap = await getDocs(q);
-    docSnap.forEach((doc) => {
-      const data = doc.data();
-      if (data && data.items) {
-        const subId = data.items[0].subscription;
-      }
+    setIsLoading(true);
+    const functionRef = httpsCallable(
+      functions,
+      'ext-firestore-stripe-payments-fea4-createPortalLink'
+    );
+    const { data } = await functionRef({
+      returnUrl: window.location.origin + '/home',
     });
+    router.push(data.url);
   };
 
   const [_, userStatus] = useUserRole();
+
+  if (isLoading) return <Spinner />;
   return (
     <div className='bg-indigo-600 h-full w-full flex flex-col'>
       <section
@@ -87,7 +95,7 @@ function Plans({ firestoreUser }) {
                     </p>
                   </div>
                   <p className='text-indigo-800 font-light text-center mt-6 mb-5 leading-normal text-left text-gray-900 border-0 border-gray-200'>
-                    Free trial for 7 days. <br />
+                    Free trial for 14 days. <br />
                     After this period ends you will be charged: <br />
                     {plan.price} {plan.billingPeriod}
                   </p>
@@ -194,11 +202,20 @@ function Plans({ firestoreUser }) {
                   <h3 className='m-0 text-2xl font-semibold leading-tight tracking-tight text-black border-0 border-gray-200 sm:text-3xl md:text-4xl'>
                     Your plan is: Personal
                   </h3>
+                  <Link href='/home'>
+                    <button
+                      type='button'
+                      className='inline-flex justify-center w-full px-4 py-3 mt-8 font-sans text-sm leading-none text-center text-white no-underline bg-indigo-600 border rounded-md cursor-pointer hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:md:text-lg'
+                    >
+                      Go back
+                    </button>
+                  </Link>
                   <button
+                    type='button'
                     onClick={cancelSubscription}
-                    className='inline-flex justify-center w-full px-4 py-3 mt-8 font-sans text-sm leading-none text-center text-white no-underline bg-indigo-600 border rounded-md cursor-pointer hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:md:text-lg'
+                    className='inline-flex justify-center w-full px-4 py-3 mt-8 font-sans text-sm leading-none text-center text-indigo-600 border-indigo-600 no-underline bg-transparent-600 border rounded-md cursor-pointer hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:md:text-lg'
                   >
-                    Cancel Subscription
+                    Cancel
                   </button>
                 </>
               )}
