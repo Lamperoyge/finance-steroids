@@ -5,9 +5,12 @@ import ConnectWalletModal from 'components/ui/ConnectWalletModal';
 import { useState } from 'react';
 import { useFirestore } from 'context/FirestoreContext';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import useUserRole from 'hooks/useUserRole';
 
 export default function Wallets() {
   const [openModal, setOpenModal] = useState(false);
+  const [isRoleLoading, userStatus] = useUserRole();
+
   const { addUserWallet, wallets } = useFirestore();
 
   const walletCallback = async (connectedWallets) => {
@@ -65,13 +68,21 @@ export default function Wallets() {
           })}
       </div>
       <div className='w-full flex flex-col justify-center items-center'>
-        <button
-          type='button'
-          onClick={() => setOpenModal(true)}
-          className='m-4 hover:bg-primary text-center py-3.5 rounded-lg w-full border border-primary text-white text-sm font-semibold'
-        >
-          Connect new wallet
-        </button>
+        {userStatus || wallets.length === 0 ? (
+          <button
+            type='button'
+            onClick={() => setOpenModal(true)}
+            className='m-4 hover:bg-primary text-center py-3.5 rounded-lg w-full border border-primary text-white text-sm font-semibold'
+          >
+            Connect new wallet
+          </button>
+        ) : (
+          <Link href='/plans' passHref>
+            <a className='m-4 hover:bg-primary text-center py-3.5 rounded-lg w-full border border-primary text-white text-sm font-semibold'>
+              Upgrade to connect more wallets
+            </a>
+          </Link>
+        )}
         <Link href='/wallets'>
           <a className='hover:bg-primary text-center py-3.5 rounded-lg w-full border border-primary text-white text-sm font-semibold'>
             View all

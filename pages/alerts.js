@@ -3,6 +3,7 @@ import { useFirestore } from 'context/FirestoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { deleteAlert } from 'services/firestore';
+
 const typesMap = {
   market_cap: 'Market Cap',
   floor_price: 'Floor Price',
@@ -24,10 +25,6 @@ export default function AlertsPage() {
           <h2 className='text-xl font-semibold leading-loose text-white'>
             Alerts
           </h2>
-          {/* <button class="flex py-3 px-4 rounded-lg border border-gray-700 gap-x-2.5">
-        <OptionsIcon />
-        <span class="text-sm text-white">Filter order</span>
-      </button> */}
         </div>
         <table className='w-full'>
           <thead>

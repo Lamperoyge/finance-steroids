@@ -20,7 +20,7 @@ const menus = [
   { name: 'Dashboard', icon: faChartBar, link: '/home' },
   { name: 'Watchlist', icon: faRectangleList, link: '/watchlist' },
   { name: 'Alerts', icon: faFileLines, link: '/alerts' },
-  // { name: 'Wallets', icon: faRotate, link: '/wallets' },
+  { name: 'Plans', icon: faRotate, link: '/plans' },
   { name: 'Logout', icon: faXmark, action: 'logout' },
 ];
 
@@ -56,7 +56,7 @@ function Sidebar() {
       className={`flex flex-col gap-y-4 items-center py-8 bg-gray-900 ${width}`}
     >
       <button className='p-2 bg-opacity-20 rounded-xl bg-primary'>
-        {/* <img className='w-24' src={'/floordle_black1.svg'} /> */}
+        <img className='w-12' src={'/favicon.png'} />
       </button>
       <div className='flex flex-col gap-y-4 items-end self-end w-full'>
         {menus.map((menu, idx) => {
