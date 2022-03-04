@@ -13,28 +13,28 @@ function Plans({ firestoreUser }) {
   const router = useRouter();
   const plans = [
     {
-      id: 'price_1KS55QLaJUYuY17381reKDqb',
+      id: 'price_1KZRuNLaJUYuY173yJDcVq6U',
       key: 1,
       title: '1 month',
       price: '14.99$',
       billingPeriod: '/ month',
     },
     {
-      id: 'price_1KZ29HLaJUYuY1737bY6pu7A',
+      id: 'price_1KZRuNLaJUYuY173gUXdVS4T',
       title: '3 months',
       key: 2,
       billingPeriod: '/ 3 months',
       price: '38.99$',
     },
     {
-      id: 'price_1KZ2BkLaJUYuY173FHuc1GAY',
+      id: 'price_1KZRuNLaJUYuY173eNdXwEXx',
       title: '6 months',
       billingPeriod: '/ 6 months',
       key: 3,
       price: '65.99$',
     },
     {
-      id: 'price_1KZ2CWLaJUYuY173OOeb1WYF',
+      id: 'price_1KZRuNLaJUYuY173zDUxsweG',
       title: '1 year',
       billingPeriod: '/ year',
       key: 4,

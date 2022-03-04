@@ -43,6 +43,7 @@ const mobileCheck = function () {
 
 function Sidebar() {
   const router = useRouter();
+
   const { logout } = useAuth();
 
   const activeRoute = router.pathname;
@@ -50,8 +51,11 @@ function Sidebar() {
   const actionsMap = {
     logout: logout,
   };
+
   const isMobile = mobileCheck();
+
   const width = typeof window !== 'undefined' && isMobile ? 'w-24' : 'w-1/8';
+
   return (
     <div
       className={`flex flex-col gap-y-4 items-center py-8 bg-gray-900 ${width}`}
