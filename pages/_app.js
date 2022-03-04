@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }) {
   const router = useRouter();
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_NODE_ENV !== 'development') {
-      hotjar.initialize(2829018, 6);
+      hotjar.initialize(2859493, 6);
       TagManager.initialize(tagManagerArgs);
     }
   }, []);
