@@ -10,6 +10,7 @@ export async function createCheckoutSession(uid, price) {
       success_url: window.location.origin + '/home',
       cancel_url: window.location.origin + '/plans',
       trial_period_days: 14,
+      allow_promotion_codes: true,
     }
   );
 
