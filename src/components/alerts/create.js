@@ -12,6 +12,8 @@ const validationSchema = Yup.object({
   openSea: Yup.string().min(30),
   alertType: Yup.string().required('Select the indicator to follow'),
   target: Yup.string().required(),
+  triggerCondition: Yup.string().required(),
+  frequency: Yup.string().required(),
 });
 
 import { useFirestore } from 'context/FirestoreContext';
@@ -100,10 +102,32 @@ export default function CreateAlert() {
       ],
     },
     {
+      type: 'select',
+      label: 'Choose when to trigger',
+      name: 'triggerCondition',
+      data: [
+        { slug: 'dropsBelow', name: 'Drops below' },
+        { slug: 'lessThanOrEqualsTo', name: 'Drops below or is equal' },
+        { slug: 'equals', name: 'Equals' },
+        { slug: 'risesAbove', name: 'Rises above' },
+        { slug: 'risesAboveOrEquals', name: 'Rises above or is equal' },
+      ],
+    },
+    {
       type: 'input',
       label: 'Target',
       placeholder: '10',
       name: 'target',
+    },
+    {
+      type: 'select',
+      label: 'How often',
+      name: 'frequency',
+      data: [
+        { slug: 'once', name: 'Once' },
+        { slug: 'daily', name: 'Daily' },
+        { slug: 'everytime', name: 'Everytime target is hit' },
+      ],
     },
   ];
 
@@ -124,6 +148,7 @@ export default function CreateAlert() {
             handleBlur,
             setFieldValue,
           }) => {
+            console.log(errors);
             return (
               <form onSubmit={handleSubmit}>
                 <div className='flex items-center flex-col sm:flex-row'>
@@ -224,7 +249,7 @@ export default function CreateAlert() {
           }}
         </Formik>
       )}
-      {!userStatus && alerts && alerts.length > 0 ? (
+      {!userStatus && alerts && alerts.length > 2 ? (
         <Link href='/plans' passHref>
           <a
             className={`block font-semibold text-center bg-indigo-600 py-2 px-2 rounded-lg w-full my-4 hover:bg-indigo-400 text-white`}

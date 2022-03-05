@@ -680,6 +680,7 @@ export default function Home() {
                   </svg>
                   1 wallet
                 </li>
+
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
                     className='w-5 h-5 mr-2 font-semibold leading-7 text-indigo-600 sm:h-5 sm:w-5 md:h-6 md:w-6'
@@ -695,7 +696,7 @@ export default function Home() {
                       d='M5 13l4 4L19 7'
                     ></path>
                   </svg>
-                  1 Watchlist
+                  3 alerts
                 </li>
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <svg
@@ -714,14 +715,14 @@ export default function Home() {
                   </svg>
                   Insights - WIP
                 </li>
-                <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
+                {/* <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <FontAwesomeIcon
                     className='text-gray-600 w-5 h-5 mr-2'
                     // style={{ fontSize: '10vh' }}
                     icon={faXmark}
                   />{' '}
                   <span>Alerts</span>
-                </li>
+                </li> */}
                 <li className='inline-flex items-center block w-full mb-2 ml-5 font-semibold text-left border-solid'>
                   <FontAwesomeIcon
                     className='text-gray-600 w-5 h-5 mr-2'
