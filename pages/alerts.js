@@ -9,6 +9,20 @@ const typesMap = {
   floor_price: 'Floor Price',
   average_price: 'Average Price',
 };
+
+const triggerType = {
+  dropsBelow: 'Drops below',
+  lessThanOrEqualsTo: 'Drops below or is equal',
+  equals: 'Equals',
+  risesAbove: 'Rises above',
+  risesAboveOrEquals: 'Rises above or is equal',
+};
+
+const frequencyMap = {
+  once: 'Once',
+  daily: 'Daily',
+  everytime: 'Everytime target is hit',
+};
 export default function AlertsPage() {
   const { alerts, deleteUserAlert } = useFirestore();
   const handleDelete = (id) => {
@@ -31,7 +45,9 @@ export default function AlertsPage() {
             <tr className='text-sm font-semibold text-white'>
               <td className='py-4 border-b border-gray-700'>Collection</td>
               <td className='py-4 border-b border-gray-700'>Type</td>
+              <td className='py-4 border-b border-gray-700'>Trigger</td>
               <td className='py-4 border-b border-gray-700'>Target</td>
+              <td className='py-4 border-b border-gray-700'>Frequency</td>
               <td className='py-4 border-b border-gray-700'>Active</td>
               <td className='py-4 border-b border-gray-700'>Actions</td>
             </tr>
@@ -41,10 +57,18 @@ export default function AlertsPage() {
               return (
                 <tr key={idx} className='text-sm text-gray-500'>
                   <td className='py-4'>{alert.slug || 'Doodles'}</td>
+
                   <td className='py-4'>
                     {typesMap[alert.alertType] || 'Alert type'}
                   </td>
+                  <td className='py-4'>
+                    {triggerType[alert.triggerCondition] || 'trigger'}
+                  </td>
+
                   <td className='py-4'>{alert.target || ''}</td>
+                  <td className='py-4'>
+                    {frequencyMap[alert.frequency] || 'trigger'}
+                  </td>
                   <td className='py-4'>
                     {alert.active ? 'Active' : 'Inactive'}
                   </td>
