@@ -354,7 +354,7 @@ export default function Home() {
               </p>
               <div className='max-w-lg mx-auto lg:mx-0'>
                 <div className='flex items-center justify-center w-full my-6 space-x-2 lg:justify-start sm:space-x-6 lg:my-12'>
-                  <Link href={'/#join'}>
+                  <Link passHref href={'/sign-up'}>
                     <a className='px-4 py-3 text-sm font-bold tracking-tight text-white transition duration-200 transform rounded-lg shadow-2xl sm:px-6 bg-indigo-600 sm:text-lg hover:scale-105'>
                       Join
                     </a>
@@ -732,9 +732,9 @@ export default function Home() {
                   Summary
                 </li>
               </ul>
-              <Link href='/#join'>
+              <Link href='/sign-up'>
                 <button className='inline-flex justify-center w-full px-4 py-3 mt-8 font-sans text-sm leading-none text-center text-indigo-600 no-underline bg-transparent border border-indigo-600 rounded-md cursor-pointer hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:md:text-lg'>
-                  Join the waiting list
+                  Start now
                 </button>
               </Link>
             </div>
@@ -754,11 +754,8 @@ export default function Home() {
                 your favourite NFTs!
               </p>
             </div>
-            <Link href={'/sign-up'}>
-              <a
-                href='#_'
-                className='inline-flex items-center justify-center w-full px-5 py-4 mt-6 ml-0 font-sans leading-none text-white no-underline bg-indigo-600 border border-indigo-600 border-solid rounded cursor-pointer md:w-auto lg:mt-0 hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:text-lg lg:ml-6 md:text-xl'
-              >
+            <Link href={'/sign-up'} passHref>
+              <a className='inline-flex items-center justify-center w-full px-5 py-4 mt-6 ml-0 font-sans leading-none text-white no-underline bg-indigo-600 border border-indigo-600 border-solid rounded cursor-pointer md:w-auto lg:mt-0 hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:text-lg lg:ml-6 md:text-xl'>
                 Get Started
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
