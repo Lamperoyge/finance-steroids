@@ -1,15 +1,14 @@
-import { ethers } from 'react';
 const Moralis = require('moralis/node');
 
-const serverUrl = 'https://xdwpxmthbr7x.usemoralis.com:2053/server';
-const appId = 'ZQKlp0YWUD7FN9d8ROABwY6pdxdPb8RqA6zyIRhp';
+const serverUrl = process.env.MORALIS_SERVER_URL;
+const appId = process.env.MORALIS_APP_ID;
 
 Moralis.start({ serverUrl, appId });
 
 export default async function getWalletData(req, res) {
   try {
     const NFTs = await Moralis.Web3API.account.getNFTs({
-      chain: 'rinkeby', //temporary
+      chain: 'eth',
       address: req.body.address,
     });
     res.status(200).json({ response: NFTs });
