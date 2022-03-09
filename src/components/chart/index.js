@@ -19,7 +19,7 @@ const data = {
     {
       fill: false,
       lineTension: 0.1,
-      backgroundColor: '#1F1D2B',
+      backgroundColor: '#65B0F',
       grid: false,
       borderColor: '#3773f5',
       borderCapStyle: 'butt',
