@@ -96,7 +96,6 @@ export const FirestoreProvider = ({ children }) => {
     return Math.floor(timestamp / 60000);
   };
 
-  console.log(state.wallets);
   const fetchCollections = async () => {
     const q = query(
       collection(db, 'collections'),
