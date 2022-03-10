@@ -26,10 +26,9 @@ if (!getApps().length) {
   app = initializeApp(firebaseConfig);
 }
 
-if (app) {
+if (app && typeof window !== 'undefined') {
   getAnalytics(app);
 }
-
 export const auth = getAuth();
 export const db = getFirestore();
 export const functions = getFunctions();
