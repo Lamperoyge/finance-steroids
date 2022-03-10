@@ -8,6 +8,8 @@ import Link from 'next/link';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
 import Tooltip from 'components/ui/Tooltip';
+import CreateAlert from 'components/alerts/create';
+
 const Card = ({ title, data }) => {
   return (
     <div className='flex items-left gap-x-3 flex-col '>
@@ -62,7 +64,7 @@ const CardList = ({ collection }) => {
     },
   ];
   return (
-    <div className='flex gap-6 flex-row w-full justify-center items-center flex-wrap'>
+    <div className='flex gap-6 flex-row w-full justify-between items-center flex-wrap'>
       {statsToDisplay.map((stat, idx) => {
         return (
           <div
@@ -82,8 +84,17 @@ export default function CollectionItem() {
   const [transfers, setTransfers] = useState([]);
   const [collection, setCollection] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAlertCreated, setAlertIsCreated] = useState(false);
   const router = useRouter();
   const { watchlist } = useFirestore();
+
+  useEffect(() => {
+    if (isAlertCreated) {
+      setTimeout(() => {
+        setAlertIsCreated(false);
+      }, 2500);
+    }
+  }, [isAlertCreated]);
 
   useEffect(() => {
     if ((collection || watchlist.length > 0) && isLoading) setIsLoading(false);
@@ -222,6 +233,21 @@ export default function CollectionItem() {
             dangerouslySetInnerHTML={{ __html: collection.description }}
           />
         ) : null}
+        <div className='px-24'>
+          {isAlertCreated ? (
+            <h1 className='text-slate-200 text-sm text-center mt-4'>
+              Done! Successfully created an alert
+            </h1>
+          ) : (
+            <CreateAlert
+              defaultCollection={collection}
+              btnWidth='1/2'
+              callback={() => setAlertIsCreated(true)}
+              title='Create alert'
+              formStyles='flex justify-center items-center flex-col'
+            />
+          )}
+        </div>
       </div>
       <div className='py-6'>
         <CardList collection={collection} />
