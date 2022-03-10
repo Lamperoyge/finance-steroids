@@ -17,10 +17,18 @@ const validationSchema = Yup.object({
 });
 
 import { useFirestore } from 'context/FirestoreContext';
-export default function CreateAlert() {
+
+//TODO refactor this at some point
+export default function CreateAlert({
+  title = 'Add new',
+  btnWidth = 'full',
+  defaultCollection = null,
+  formStyles = '',
+  callback = () => {},
+}) {
   const [isFormOpen, setFormOpen] = useState(false);
   const [error, setError] = useState('');
-  const [collection, setCollection] = useState(null);
+  const [collection, setCollection] = useState(defaultCollection);
   const { firestoreUser } = useAuth();
   const { watchlist, addToWatchlist, addUserAlert, alerts } = useFirestore();
   const [_, userStatus] = useUserRole();
@@ -52,6 +60,7 @@ export default function CreateAlert() {
       });
       setCollection(null);
       setFormOpen(false);
+      callback();
     }
   };
 
@@ -76,21 +85,6 @@ export default function CreateAlert() {
   };
 
   const formConfig = [
-    {
-      type: 'select',
-      name: 'watchlist',
-      data: watchlist,
-      label: 'Select from watchlist',
-      onChangeAction: setCollection,
-    },
-    {
-      type: 'input',
-      label: 'OpenSea Link',
-      placeholder: 'https://opensea.io/collection/boredapeyachtclub',
-      name: 'openSea',
-      action: searchByOpensea,
-      actionTitle: 'Search',
-    },
     {
       type: 'select',
       label: 'Select indicator to follow',
@@ -131,8 +125,29 @@ export default function CreateAlert() {
     },
   ];
 
+  if (!defaultCollection) {
+    formConfig.unshift(
+      {
+        type: 'select',
+        name: 'watchlist',
+        data: watchlist,
+        label: 'Select from watchlist',
+        onChangeAction: setCollection,
+      },
+      {
+        type: 'input',
+        label: 'OpenSea Link',
+        placeholder: 'https://opensea.io/collection/boredapeyachtclub',
+        name: 'openSea',
+        action: searchByOpensea,
+        actionTitle: 'Search',
+      }
+    );
+  }
+
+  const formWidth = defaultCollection ? 'w-full' : 'w-1/2';
   return (
-    <div className='w-full'>
+    <div className={`w-full ${!isFormOpen ? formStyles : ''}`}>
       {isFormOpen && (
         <Formik
           validationSchema={validationSchema}
@@ -148,7 +163,6 @@ export default function CreateAlert() {
             handleBlur,
             setFieldValue,
           }) => {
-            console.log(errors);
             return (
               <form onSubmit={handleSubmit}>
                 <div className='flex items-center flex-col sm:flex-row'>
@@ -176,7 +190,7 @@ export default function CreateAlert() {
                                 }}
                                 value={values[item.name]}
                                 onBlur={handleBlur}
-                                className='block w-1/2 px-4 text-white py-2 mt-2 text-sm placeholder-gray-600 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50'
+                                className={`block ${formWidth} px-4 text-white py-2 mt-2 text-sm placeholder-gray-600 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50`}
                               >
                                 <option value=''>Select...</option>
                                 {item.data.map((option, idx) => {
@@ -198,7 +212,7 @@ export default function CreateAlert() {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 value={values[item.name]}
-                                className='block w-1/2 px-4 text-white py-2 mt-2 text-sm placeholder-gray-600 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50'
+                                className={`block ${formWidth} px-4 text-white py-2 mt-2 text-sm placeholder-gray-600 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-50`}
                               />
                             )}
                             {item.action ? (
@@ -220,7 +234,7 @@ export default function CreateAlert() {
                       );
                     })}
                   </div>
-                  {collection ? (
+                  {collection && !defaultCollection ? (
                     <div className='my-4 w-1/2 flex flex-col justify-center items-center'>
                       <div className='flex h-1/3 w-1/3 justify-center items-center'>
                         <img
@@ -261,15 +275,15 @@ export default function CreateAlert() {
         <button
           onClick={() => {
             setFormOpen(!isFormOpen);
-            setCollection(null);
+            setCollection(defaultCollection);
           }}
           className={`${
             isFormOpen
-              ? 'bg-transparent border border-indigo-600'
-              : 'bg-indigo-600'
-          } py-2 px-2 rounded-lg w-full my-4 hover:bg-indigo-400 text-white`}
+              ? 'bg-transparent border border-indigo-600 w-full'
+              : `w-${btnWidth} bg-indigo-600`
+          } py-2 px-2 rounded-lg  my-4 hover:bg-indigo-400 text-white`}
         >
-          {isFormOpen ? 'Close' : 'Add new'}
+          {isFormOpen ? 'Close' : title}
         </button>
       )}
     </div>
