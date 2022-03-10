@@ -12,7 +12,9 @@ const Card = ({ title, data }) => {
   return (
     <div className='flex items-left gap-x-3 flex-col '>
       <div className='text-lg tracking-wide text-gray-500'>{title}</div>
-      <div className='text-xl font-semibold text-white'>{data.toFixed(2)}</div>
+      <div className='text-xl font-semibold text-white'>
+        {data ? data.toFixed(2) : '---'}
+      </div>
     </div>
   );
 };
@@ -140,7 +142,7 @@ export default function CollectionItem() {
     );
   }
 
-  console.log(transfers);
+  console.log(collection);
   return (
     <section>
       <div className='relative'>
@@ -243,7 +245,7 @@ export default function CollectionItem() {
               transfers.result?.map((transfer, idx) => {
                 const timestamp = moment(transfer.block_timestamp);
                 const currentDate = moment();
-                const diff = currentDate.diff(timestamp, 'minutes');
+                let diff = currentDate.diff(timestamp, 'minutes');
                 return (
                   <tr key={idx} className='text-sm text-gray-500'>
                     <td className='py-4'>{diff} minutes ago</td>
