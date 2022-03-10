@@ -92,6 +92,39 @@ export const FirestoreProvider = ({ children }) => {
     dispatch({ type: ADD_ALERT, payload: [...state.alerts, item] });
   };
 
+  // const updateUserWallets = async () => {
+  //   if (state.wallets && state.wallets.length) {
+  //     const docRef = doc(db, 'wallets', firestoreUser.id);
+  //     await Promise.all(
+  //       state.wallets.map(async (wallet) => {
+  //         try {
+  //           const nfts = await getNftBalance(wallet.publicKey);
+  //           await updateDoc(docRef, {
+  //             linkedWallets: arrayRemove({
+  //               publicKey: wallet.publicKey,
+  //               portfolio: wallet.portfolio,
+  //             }),
+  //           });
+  //           await updateDoc(docRef, {
+  //             linkedWallets: arrayUnion({
+  //               publicKey: wallet.publicKey,
+  //               portfolio: nfts,
+  //             }),
+  //           });
+  //         } catch (error) {
+  //           console.log(error);
+  //         }
+  //       })
+  //     );
+  //   }
+  // };
+
+  useEffect(() => {
+    if (firestoreUser && firestoreUser.id && state.wallets.length) {
+      // updateUserWallets();
+    }
+  }, [firestoreUser, state.wallets]);
+
   const timestampToMinutes = (timestamp) => {
     return Math.floor(timestamp / 60000);
   };

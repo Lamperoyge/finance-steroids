@@ -1,11 +1,11 @@
 import { useAuth } from 'context/AuthContext';
 import { useFirestore } from 'context/FirestoreContext';
 import { deleteUserWallet } from 'services/firestore';
-
+import { mobileCheck } from 'utils';
 export default function WalletsPage() {
   const { firestoreUser } = useAuth();
   const { wallets } = useFirestore();
-
+  const isMobile = mobileCheck();
   return (
     <>
       {wallets.map((wallet, idx) => {
@@ -13,7 +13,9 @@ export default function WalletsPage() {
           <div key={idx} className='p-6 bg-gray-900 rounded-lg'>
             <div className='flex justify-between items-center pb-4'>
               <h2 className='text-xl font-semibold leading-loose text-white'>
-                {wallet.publicKey}
+                {!isMobile
+                  ? wallet.publicKey
+                  : '...' + wallet.publicKey.slice(-12)}
               </h2>
               <button
                 type='button'
@@ -54,7 +56,9 @@ export default function WalletsPage() {
                         <span>...</span>
                         {item.token_address.slice(-4)}
                       </td>
-                      <td className='py-4 w-1/4'>#{item.token_id}</td>
+                      <td className='py-4 w-1/4'>
+                        #{item.token_id.slice(0, 8)}
+                      </td>
                     </tr>
                   );
 

@@ -64,7 +64,7 @@ export default function PieCard() {
       <hr className='border-gray-700' />
       <div className='flex gap-x-7'>
         {/* <img width="176" :src="`/img/chart.svg`" alt="" /> */}
-        {Object.keys(pieData).length ? (
+        {Object.keys(pieData).length && pieData.labels.length ? (
           <Pie pieData={pieData} />
         ) : (
           <h1 className='text-gray-400'>Overview over your NFT collections</h1>
