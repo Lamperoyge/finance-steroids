@@ -85,7 +85,6 @@ export const getUserAlerts = async (uid) => {
         ...i.data(),
       })
     );
-    console.log(queryMap);
     return queryMap;
   } catch (error) {
     alert('Woops! Something is wrong');
