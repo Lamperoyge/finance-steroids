@@ -8,7 +8,7 @@ Moralis.start({ serverUrl, appId });
 export default async function getWalletData(req, res) {
   try {
     const NFTs = await Moralis.Web3API.account.getNFTs({
-      chain: 'eth',
+      chain: 'matic',
       address: req.body.address,
     });
     res.status(200).json({ response: NFTs });

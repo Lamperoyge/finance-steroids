@@ -64,7 +64,7 @@ export default function Reports() {
                   <span>...</span>
                   {order.token_address.slice(-4)}
                 </td>
-                <td className='py-4 w-1/4'>#{order.token_id}</td>
+                <td className='py-4 w-1/4'>#{order.token_id.slice(0, 8)}</td>
               </tr>
             );
           })}

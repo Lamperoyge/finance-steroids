@@ -93,7 +93,9 @@ export default function DefaultHoldings() {
                             aria-hidden
                             className='absolute inset-0 opacity-50 rounded-full'
                           />
-                          <span className='relative'>#{item.token_id}</span>
+                          <span className='relative'>
+                            #{item.token_id.slice(0, 8)}
+                          </span>
                         </span>
                       </td>
                     </tr>

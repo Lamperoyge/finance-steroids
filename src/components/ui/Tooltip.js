@@ -1,4 +1,7 @@
+import { mobileCheck } from 'utils';
 export default function Tooltip({ content = 'Tooltip content' }) {
+  const isMobile = mobileCheck();
+  if (isMobile) return null;
   return (
     <div
       role='tooltip'

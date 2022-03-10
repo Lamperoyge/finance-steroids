@@ -9,6 +9,9 @@ import moment from 'moment';
 import { useState, useEffect } from 'react';
 import Tooltip from 'components/ui/Tooltip';
 import CreateAlert from 'components/alerts/create';
+import { mobileCheck } from 'utils';
+
+const isMobile = mobileCheck();
 
 const Card = ({ title, data }) => {
   return (
@@ -128,6 +131,7 @@ export default function CollectionItem() {
     fetchTransfers(collection);
   }, [collection]);
 
+  const sliceAmount = isMobile ? 6 : 12;
   if (isLoading) {
     return (
       <div className='w-full h-1/4 block z-50'>
@@ -153,7 +157,6 @@ export default function CollectionItem() {
     );
   }
 
-  console.log(collection);
   return (
     <section>
       <div className='relative'>
@@ -260,8 +263,12 @@ export default function CollectionItem() {
               <td className='py-4 border-b border-gray-700'>Time</td>
 
               <td className='py-4 border-b border-gray-700'>Token ID</td>
-              <td className='py-4 border-b border-gray-700'>Block Hash</td>
-              <td className='py-4 border-b border-gray-700'>Block Number</td>
+              {!isMobile && (
+                <td className='py-4 border-b border-gray-700'>Block Hash</td>
+              )}
+              {!isMobile && (
+                <td className='py-4 border-b border-gray-700'>Block Number</td>
+              )}
               <td className='py-4 border-b border-gray-700'>From</td>
               <td className='py-4 border-b border-gray-700'>To</td>
             </tr>
@@ -274,26 +281,32 @@ export default function CollectionItem() {
                 let diff = currentDate.diff(timestamp, 'minutes');
                 return (
                   <tr key={idx} className='text-sm text-gray-500'>
-                    <td className='py-4'>{diff} minutes ago</td>
+                    <td className='py-4'>
+                      {diff} {isMobile ? 'min' : 'minutes ago'}
+                    </td>
 
                     <td className='py-4 relative'>
-                      {transfer.token_id.slice(0, 12)}
+                      {transfer.token_id.slice(0, sliceAmount)}
                       <Tooltip content={transfer.token_id} />
                     </td>
+                    {!isMobile && (
+                      <td className='py-4 relative'>
+                        {transfer.block_hash.slice(0, sliceAmount)}
+                        <Tooltip content={transfer.block_hash} />
+                      </td>
+                    )}
+                    {!isMobile && (
+                      <td className='py-4 relative'>
+                        {transfer.block_number.slice(0, sliceAmount)}
+                        <Tooltip content={transfer.block_number} />
+                      </td>
+                    )}
                     <td className='py-4 relative'>
-                      {transfer.block_hash.slice(0, 12)}
-                      <Tooltip content={transfer.block_hash} />
-                    </td>
-                    <td className='py-4 relative'>
-                      {transfer.block_number.slice(0, 12)}
-                      <Tooltip content={transfer.block_number} />
-                    </td>
-                    <td className='py-4 relative'>
-                      {transfer.from_address.slice(0, 12)}
+                      {transfer.from_address.slice(0, sliceAmount)}
                       <Tooltip content={transfer.from_address} />
                     </td>
                     <td className='py-4 relative'>
-                      {transfer.to_address.slice(0, 12)}
+                      {transfer.to_address.slice(0, sliceAmount)}
 
                       <Tooltip content={transfer.to_address} />
                     </td>
