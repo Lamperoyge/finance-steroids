@@ -1,13 +1,3 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faChartBar,
-  faRotate,
-  faCoins,
-  faRectangleList,
-  faBell,
-  faFileLines,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import { useFirestore } from 'context/FirestoreContext';
 
@@ -38,19 +28,15 @@ export default function StatsCard() {
               >
                 <div className='flex items-center gap-x-3'>
                   <div className='p-2 bg-gray-800 flex justify-center items-center w-full rounded-lg'>
-                    <img src={stat.image} />
-                  </div>
-
-                  <div className={`p-0.5 rounded-full bg-accent-green/20`}>
-                    {/* {stat.status === 'up' ? (
-                    <span className='fill-current text-accent-green'>up</span>
-                  ) : (
-                    <span className='fill-current text-accent-red'>dw</span>
-                  )} */}
+                    <Link href={`/watchlist/${stat.token_address}`}>
+                      <img className='cursor-pointer' src={stat.image} />
+                    </Link>
                   </div>
                 </div>
                 <div className='text-xl font-semibold text-white'>
-                  {stat.name}
+                  <Link passHref href={`/watchlist/${stat.token_address}`}>
+                    <a className='block'>{stat.name}</a>
+                  </Link>
                 </div>
                 <div className='text-lg flex justify-between items-center tracking-wide text-gray-100'>
                   <span>Price floor</span>

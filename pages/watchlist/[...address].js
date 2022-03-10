@@ -1,23 +1,130 @@
-import { useState } from 'react';
-import { useAuth } from 'context/AuthContext';
 import { useFirestore } from 'context/FirestoreContext';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faTwitter,
-  faDiscord,
-  faWindowRestore,
-  faInstagram,
-} from '@fortawesome/free-regular-svg-icons';
+import { faWindowRestore } from '@fortawesome/free-regular-svg-icons';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 import Link from 'next/link';
+import moment from 'moment';
+import { useState, useEffect } from 'react';
+import Tooltip from 'components/ui/Tooltip';
+const Card = ({ title, data }) => {
+  return (
+    <div className='flex items-left gap-x-3 flex-col '>
+      <div className='text-lg tracking-wide text-gray-500'>{title}</div>
+      <div className='text-xl font-semibold text-white'>{data.toFixed(2)}</div>
+    </div>
+  );
+};
+
+const CardList = ({ collection }) => {
+  const statsToDisplay = [
+    {
+      title: 'Average Price',
+      data: collection.stats.average_price,
+      additionalData: [
+        {
+          one_day_average_price: collection.stats.one_day_average_price,
+          one_day_change: collection.stats.one_day_change,
+          one_day_sales: collection.stats.one_day_sales,
+        },
+      ],
+    },
+    {
+      title: 'Floor Price',
+      data: collection.stats.floor_price,
+    },
+    {
+      title: 'Market Cap',
+      data: collection.stats.market_cap,
+    },
+    {
+      title: 'Total Volume',
+      data: collection.stats.total_volume,
+    },
+    {
+      title: 'Supply',
+      data: collection.stats.total_supply,
+    },
+    {
+      title: 'Sales in 24h',
+      data: collection.stats.one_day_sales,
+    },
+    {
+      title: 'Owners',
+      data: collection.stats.num_owners,
+    },
+    {
+      title: 'Total sales',
+      data: collection.stats.total_sales,
+    },
+  ];
+  return (
+    <div className='flex gap-6 flex-row w-full justify-center items-center flex-wrap'>
+      {statsToDisplay.map((stat, idx) => {
+        return (
+          <div
+            key={idx}
+            style={{ width: '44%' }}
+            className='p-4 bg-gray-900 rounded-lg gap-y-3'
+          >
+            <Card {...stat} />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 export default function CollectionItem() {
+  const [transfers, setTransfers] = useState([]);
+  const [collection, setCollection] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { watchlist } = useFirestore();
-  const collection = watchlist.find(
-    (i) => i.token_address === router.query.address[0]
-  );
 
-  if (!collection) {
+  useEffect(() => {
+    if ((collection || watchlist.length > 0) && isLoading) setIsLoading(false);
+  }, [collection, watchlist]);
+
+  useEffect(() => {
+    if (watchlist && !collection) {
+      const collectionFromWatchlist = watchlist.find(
+        (i) => i.token_address === router.query.address[0]
+      );
+      if (collectionFromWatchlist) {
+        setCollection(collectionFromWatchlist);
+      }
+    }
+  }, [watchlist]);
+
+  useEffect(async () => {
+    if (collection && collection.token_address) {
+      try {
+        const { data } = await axios.post('/api/get-owners', {
+          address: collection.token_address,
+        });
+        if (data.response) setTransfers(data.response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [collection]);
+
+  if (isLoading) {
+    return (
+      <div className='w-full h-1/4 block z-50'>
+        <span className='w-full flex justify-center text-green-500 opacity-75 top-1/2 my-0 mx-auto block relative w-20 h-20'>
+          <FontAwesomeIcon
+            className='fa-spin text-indigo-400'
+            style={{ fontSize: '8vh' }}
+            icon={faCircleNotch}
+          />
+        </span>
+      </div>
+    );
+  }
+  if (!collection && !isLoading) {
     return (
       <section>
         <div className='bg-gray-900 p-6 rounded-lg'>
@@ -28,8 +135,8 @@ export default function CollectionItem() {
       </section>
     );
   }
-  console.log(collection);
 
+  console.log(transfers);
   return (
     <section>
       <div className='relative'>
@@ -41,11 +148,6 @@ export default function CollectionItem() {
             />
           ) : null}
         </div>
-        {/* <img
-          style={{ left: '44%' }}
-          className='border rounded-full border-8 h-1/2 border-indigo-600 inset-x-0 bottom-0 '
-          src={collection.image}
-        /> */}
       </div>
       <div>
         <div className='flex flex-col text-xl text-white w-full text-center p-4 font-bold'>
@@ -110,10 +212,64 @@ export default function CollectionItem() {
         {/* <img src={collectio}/> */}
         {collection.description ? (
           <div
-            className='text-white flex justify-center items-center'
+            className='text-white text-sm w-full flex justify-center md:text-md text-center flex'
             dangerouslySetInnerHTML={{ __html: collection.description }}
           />
         ) : null}
+      </div>
+      <div className='py-6'>
+        <CardList collection={collection} />
+      </div>
+      <div className='bg-gray-900 p-6 rounded-lg'>
+        <h1 className='text-white text-xl font-semibold'>Transfers</h1>
+        <table className='w-full'>
+          <thead>
+            <tr className='text-sm font-semibold text-white'>
+              <td className='py-4 border-b border-gray-700'>Time</td>
+
+              <td className='py-4 border-b border-gray-700'>Token ID</td>
+              <td className='py-4 border-b border-gray-700'>Block Hash</td>
+              <td className='py-4 border-b border-gray-700'>Block Number</td>
+              <td className='py-4 border-b border-gray-700'>From</td>
+              <td className='py-4 border-b border-gray-700'>To</td>
+            </tr>
+          </thead>
+          <tbody>
+            {!!transfers &&
+              transfers.result?.map((transfer, idx) => {
+                const timestamp = moment(transfer.block_timestamp);
+                const currentDate = moment();
+                const diff = currentDate.diff(timestamp, 'minutes');
+                return (
+                  <tr key={idx} className='text-sm text-gray-500'>
+                    <td className='py-4'>{diff} minutes ago</td>
+
+                    <td className='py-4 relative'>
+                      {transfer.token_id.slice(0, 12)}
+                      <Tooltip content={transfer.token_id} />
+                    </td>
+                    <td className='py-4 relative'>
+                      {transfer.block_hash.slice(0, 12)}
+                      <Tooltip content={transfer.block_hash} />
+                    </td>
+                    <td className='py-4 relative'>
+                      {transfer.block_number.slice(0, 12)}
+                      <Tooltip content={transfer.block_number} />
+                    </td>
+                    <td className='py-4 relative'>
+                      {transfer.from_address.slice(0, 12)}
+                      <Tooltip content={transfer.from_address} />
+                    </td>
+                    <td className='py-4 relative'>
+                      {transfer.to_address.slice(0, 12)}
+
+                      <Tooltip content={transfer.to_address} />
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
       </div>
     </section>
   );
