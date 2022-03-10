@@ -98,17 +98,21 @@ export default function CollectionItem() {
     }
   }, [watchlist]);
 
-  useEffect(async () => {
-    if (collection && collection.token_address) {
+  const fetchTransfers = async (col) => {
+    if (col && col.token_address) {
       try {
         const { data } = await axios.post('/api/get-owners', {
-          address: collection.token_address,
+          address: col.token_address,
         });
         if (data.response) setTransfers(data.response);
       } catch (error) {
         console.log(error);
       }
     }
+  };
+
+  useEffect(() => {
+    fetchTransfers(collection);
   }, [collection]);
 
   if (isLoading) {
@@ -198,7 +202,7 @@ export default function CollectionItem() {
               <a
                 target='_blank'
                 href={collection.external_url}
-                rel='norefferer'
+                rel='noreferrer'
               >
                 <FontAwesomeIcon
                   icon={faWindowRestore}
