@@ -6,30 +6,28 @@ import {
   ADD_ALERT,
 } from './firestore.types';
 import { db } from 'utils/firebase-config';
-import { getUserAlerts } from 'services/firestore';
+import {
+  getUserAlerts,
+  getUserWallets,
+  deleteUserWallet,
+} from 'services/firestore';
 import { getStats } from 'utils/opensea';
 import {
   doc,
-  addDoc,
   getDoc,
   getDocs,
   setDoc,
   collection,
-  onSnapshot,
   updateDoc,
   arrayUnion,
-  arrayRemove,
-  runTransaction,
   documentId,
   query,
   where,
   Timestamp,
   serverTimestamp,
-  orderBy,
 } from 'firebase/firestore';
 import { useAuth } from 'context/AuthContext';
 import { getNftBalance } from 'services/wallet';
-import axios from 'axios';
 
 const INITIAL_STATE = {
   wallets: [],
@@ -64,26 +62,26 @@ export const FirestoreProvider = ({ children }) => {
   const { firestoreUser } = useAuth();
 
   useEffect(() => {
-    const getUserWallets = async function () {
-      return onSnapshot(doc(db, 'wallets', firestoreUser.id), (snap) => {
-        if (snap.data()) {
-          dispatch({
-            type: ADD_USER_WALLETS,
-            payload: snap.data().linkedWallets,
-          });
-        }
-      });
-    };
-    let unsub;
     if (firestoreUser && firestoreUser.id) {
+      getUserWallets(firestoreUser.id).then((res) =>
+        dispatch({ type: ADD_USER_WALLETS, payload: res.linkedWallets })
+      );
       getUserAlerts(firestoreUser.id).then((res) =>
         dispatch({ type: ADD_ALERT, payload: res })
       );
-      unsub = getUserWallets();
     }
-    if (unsub && typeof unsub === 'function') return () => unsub();
+    // if (unsub && typeof unsub === 'function') return () => unsub();
   }, [firestoreUser]);
 
+  const deleteWallet = async (wallet) => {
+    if (firestoreUser.id && wallet.publicKey) {
+      await deleteUserWallet(wallet, firestoreUser.id);
+      dispatch({
+        type: ADD_USER_WALLETS,
+        payload: state.wallets.filter((i) => i.publicKey !== wallet.publicKey),
+      });
+    }
+  };
   const addToWatchlist = (items) => {
     dispatch({ type: ADD_USER_WATCHLIST, payload: items });
   };
@@ -91,39 +89,6 @@ export const FirestoreProvider = ({ children }) => {
   const addAlert = (item) => {
     dispatch({ type: ADD_ALERT, payload: [...state.alerts, item] });
   };
-
-  // const updateUserWallets = async () => {
-  //   if (state.wallets && state.wallets.length) {
-  //     const docRef = doc(db, 'wallets', firestoreUser.id);
-  //     await Promise.all(
-  //       state.wallets.map(async (wallet) => {
-  //         try {
-  //           const nfts = await getNftBalance(wallet.publicKey);
-  //           await updateDoc(docRef, {
-  //             linkedWallets: arrayRemove({
-  //               publicKey: wallet.publicKey,
-  //               portfolio: wallet.portfolio,
-  //             }),
-  //           });
-  //           await updateDoc(docRef, {
-  //             linkedWallets: arrayUnion({
-  //               publicKey: wallet.publicKey,
-  //               portfolio: nfts,
-  //             }),
-  //           });
-  //         } catch (error) {
-  //           console.log(error);
-  //         }
-  //       })
-  //     );
-  //   }
-  // };
-
-  useEffect(() => {
-    if (firestoreUser && firestoreUser.id && state.wallets.length) {
-      // updateUserWallets();
-    }
-  }, [firestoreUser, state.wallets]);
 
   const timestampToMinutes = (timestamp) => {
     return Math.floor(timestamp / 60000);
@@ -194,6 +159,10 @@ export const FirestoreProvider = ({ children }) => {
         await updateDoc(docRef, {
           linkedWallets: arrayUnion({ publicKey, portfolio: nfts }),
         });
+        dispatch({
+          type: ADD_USER_WALLETS,
+          payload: [...state.wallets, { publicKey, portfolio: nfts }],
+        });
       } else {
         const nfts = await getNftBalance(publicKey);
 
@@ -209,6 +178,10 @@ export const FirestoreProvider = ({ children }) => {
           },
           { merge: true }
         );
+        dispatch({
+          type: ADD_USER_WALLETS,
+          payload: [...state.wallets, { publicKey, portfolio: nfts }],
+        });
       }
     } catch (error) {
       throw new Error(error);
@@ -226,6 +199,7 @@ export const FirestoreProvider = ({ children }) => {
         alerts: state.alerts,
         addUserAlert: addAlert,
         deleteUserAlert,
+        deleteWallet,
       }}
     >
       {children}
