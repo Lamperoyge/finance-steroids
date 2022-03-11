@@ -13,7 +13,9 @@ import {
   where,
   deleteDoc,
   arrayRemove,
+  getDoc,
 } from 'firebase/firestore';
+import { getNftBalance } from 'services/wallet';
 
 // export const addUserWallet = async (uid, publicKey) => {
 //   try {
@@ -69,9 +71,54 @@ export const addAlert = async (obj, user) => {
   }
 };
 
+const updateUserWallets = async (uid, wallets) => {
+  const docRef = doc(db, 'wallets', uid);
+  return await Promise.all(
+    wallets.map(async (wallet) => {
+      try {
+        const nfts = await getNftBalance(wallet.publicKey);
+        return updateDoc(docRef, {
+          linkedWallets: arrayRemove({
+            publicKey: wallet.publicKey,
+            portfolio: wallet.portfolio,
+          }),
+        })
+          .then(() => {
+            const newWalletData = {
+              publicKey: wallet.publicKey,
+              portfolio: nfts,
+            };
+            updateDoc(docRef, {
+              linkedWallets: arrayUnion(newWalletData),
+            });
+            return { ...newWalletData };
+          })
+          .catch((err) => {
+            throw new Error(err);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    })
+  );
+};
+
 export const getUserWallets = async (uid) => {
   try {
-  } catch (error) {}
+    const docRef = doc(db, 'wallets', uid);
+    const response = await getDoc(docRef);
+    let result = { linkedWallets: [] };
+    if (response.exists()) {
+      let walletsData = await updateUserWallets(
+        uid,
+        response.data().linkedWallets
+      );
+      return { linkedWallets: walletsData };
+    }
+    return result;
+  } catch (error) {
+    console.log(error, 'error');
+  }
 };
 
 export const getUserAlerts = async (uid) => {
