@@ -1,14 +1,8 @@
-import Layout from 'components/layout';
+import dynamic from 'next/dynamic';
+const Layout = dynamic(() => import('components/layout'));
 import Link from 'next/link';
-import { useState } from 'react';
-import { object, string } from 'yup';
-import axios from 'axios';
-const schema = object({
-  email: string()
-    .email('Please enter a valid email')
-    .required('Please enter an email'),
-});
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Image from 'next/image';
 import {
   faChartBar,
   faRotate,
@@ -18,27 +12,9 @@ import {
   faFileLines,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
-import Steps from 'components/ui/Steps';
+const Steps = dynamic(() => import('components/ui/Steps'));
 
 export default function Home() {
-  const [emailErrors, setEmailErrors] = useState('');
-  const [emailValue, setEmailValue] = useState('');
-  const [isEmailSent, setIsEmailSent] = useState(false);
-
-  const handleEmail = async () => {
-    try {
-      const email = await schema.validate({ email: emailValue });
-      try {
-        await axios.post('/api/send-mail', { email: email.email });
-        setIsEmailSent(true);
-        setTimeout(() => {
-          setIsEmailSent(false);
-        }, 5000);
-      } catch (error) {}
-    } catch (error) {
-      setEmailErrors(error.message);
-    }
-  };
   return (
     <Layout>
       <section className='relative w-full bg-white'>
@@ -57,39 +33,6 @@ export default function Home() {
                 NFT portfolio with{' '}
                 <strong style={{ color: '#4f46e5' }}>Floordle.</strong>
               </p>
-              {isEmailSent && (
-                <>
-                  <h1 className='text-lg text-gray-600 sm:w-2/3'>
-                    {"Thank you! We'll send you an email when we're launching"}
-                  </h1>
-                </>
-              )}
-              {/* {!isEmailSent && (
-                <div className='w-full sm:w-1/2'>
-                  <input
-                    className='py-2.5 px-4 mb-4 w-full bg-gray-50 border focus:ring-2 focus:ring-opacity-90 focus:ring-indigo-500 border-gray-300 rounded focus:outline-none'
-                    type='email'
-                    placeholder='Email address'
-                    onChange={(e) => {
-                      setEmailValue(e.target.value);
-                      if (emailErrors) {
-                        setEmailErrors('');
-                      }
-                    }}
-                  />
-                  <div className='flex flex-col'>
-                    {emailErrors && (
-                      <span className='text-red-400'>{emailErrors}</span>
-                    )}
-                    <button
-                      onClick={handleEmail}
-                      className='relative self-start inline-block w-auto px-8 py-4 mx-auto mt-0 font-bold text-white bg-indigo-600 border-t border-gray-200 rounded-md shadow-xl sm:mt-1 fold-bold lg:mx-0'
-                    >
-                      Join now!
-                    </button>
-                  </div>
-                </div>
-              )} */}
               <Link href='/sign-up'>
                 <button
                   type='button'
@@ -170,9 +113,13 @@ export default function Home() {
             </div>
             <div className='relative z-50 flex flex-col items-end justify-center w-full h-full lg:w-1/2 lg:pl-10'>
               <div className='container relative left-0 w-full max-w-3xl lg:absolute lg:w-screen'>
-                <img
+                <Image
                   src='/test1.svg'
-                  className='w-full h-auto mt-20 mb-20 ml-0 lg:mb-0 lg:h-full xl:-ml-26'
+                  width={700}
+                  height={700}
+                  alt='floordle art'
+                  className='w-full h-auto mt-20 mb-20 ml-0 lg:mb-0 lg:h-full xl:-ml-26 overflow-hidden'
+                  objectFit={'contain'}
                 />
               </div>
             </div>
@@ -262,10 +209,13 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className='w-full h-full overflow-hidden leading-7 text-gray-900 border-0 border-gray-200 lg:w-1/2'>
-              <img
-                src='https://cdn.devdojo.com/images/august2021/3d-character.png'
+            <div className='flex justify-center items-center w-full h-full overflow-hidden leading-7 text-gray-900 border-0 border-gray-200 lg:w-1/2'>
+              <Image
+                src='/chairguy.png'
                 className='object-cover w-full h-full'
+                width={600}
+                alt='guy in a chair'
+                height={800}
               />
             </div>
           </div>
@@ -279,8 +229,7 @@ export default function Home() {
             <h1
               className='relative text-5xl font-black text-transparent bg-center bg-cover bg-gradient-to-br from-indigo-400 via-indigo-600 to-indigo-500 lg:text-6xl bg-clip-text'
               style={{
-                backgroundImage:
-                  "url('https://cdn.devdojo.com/images/february2021/bg-colorful.jpg')",
+                backgroundImage: "url('/colorful-bg.jpeg')",
               }}
             >
               Join now.
@@ -368,10 +317,12 @@ export default function Home() {
             <div className='relative flex items-center justify-center w-full h-full'>
               <div className='relative w-full h-auto md:h-full lg:h-auto'>
                 <div className='relative w-full h-auto overflow-hidden transition duration-300 transform shadow-lg rounded-xl group-hover:scale-95'>
-                  <img
+                  <Image
+                    width={600}
+                    height={400}
                     className='w-full'
-                    src='https://cdn.devdojo.com/images/september2021/dashboard.png'
-                    alt='image'
+                    src='/dashboard.png'
+                    alt='dashboard image'
                   />
                 </div>
               </div>

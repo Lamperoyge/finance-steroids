@@ -189,6 +189,7 @@ function Plans({ firestoreUser }) {
                   </ul>
                   <button
                     onClick={handleSubscription}
+                    type='button'
                     className='inline-flex justify-center w-full px-4 py-3 mt-8 font-sans text-sm leading-none text-center text-white no-underline bg-indigo-600 border rounded-md cursor-pointer hover:bg-indigo-700 hover:border-indigo-700 hover:text-white focus-within:bg-indigo-700 focus-within:border-indigo-700 focus-within:text-white sm:md:text-lg'
                   >
                     Subscribe

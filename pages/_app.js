@@ -1,17 +1,23 @@
 import '../styles/globals.css';
 import 'tailwindcss/tailwind.css';
-import { AuthProvider } from 'context/AuthContext';
+import dynamic from 'next/dynamic';
+
+const AuthProvider = dynamic(() =>
+  import('context/AuthContext').then((mod) => mod.AuthProvider)
+);
 import { useEffect } from 'react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import TagManager from 'react-gtm-module';
 import { hotjar } from 'react-hotjar';
 import Head from 'next/head';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // import Font Awesome CSS
-import { FirestoreProvider } from 'context/FirestoreContext';
-import SidebarLayout from 'components/layout/SidebarLayout';
+const FirestoreProvider = dynamic(() =>
+  import('context/FirestoreContext').then((mod) => mod.FirestoreProvider)
+);
+const SidebarLayout = dynamic(() => import('components/layout/SidebarLayout'));
 import { useRouter } from 'next/router';
 import { getDefaultProvider } from 'ethers';
-import { NftProvider, useNft } from 'use-nft';
+import { NftProvider } from 'use-nft';
 
 // We are using the "ethers" fetcher here.
 const ethersConfig = {
