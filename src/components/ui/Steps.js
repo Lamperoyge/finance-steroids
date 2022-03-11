@@ -36,15 +36,6 @@ export default function Steps() {
       </p>
       <div className='mt-16 flex flex-col max-w-6xl px-3 mx-auto md:px-0 lg:px-8 xl:px-0 md:flex-row'>
         <div className='w-full pr-5 mb-6 space-y-1 md:mb-0 md:space-y-4 md:w-4/12 xl:pr-12'>
-          {/* <h2 onClick={() => setStep(steps[0])} className="pb-2 text-5xl font-extrabold cursor-pointer lg:text-6xl" :class="{ 'text-black' : section == 'design', 'text-gray-400 hover:text-gray-900' : section != 'design' }">
-              Design
-            </h2>
-            <h2 onClick="section='launch'" className="py-2 text-5xl font-extrabold cursor-pointer lg:text-6xl" :class="{ 'text-black' : section == 'launch', 'text-gray-400 hover:text-gray-900' : section != 'launch' }">
-              Launch
-            </h2>
-            <h2 onClick="section='learn'" className="py-2 text-5xl font-extrabold cursor-pointer lg:text-6xl" :class="{ 'text-black' : section == 'learn', 'text-gray-400 hover:text-gray-900' : section != 'learn' }">
-              Learn
-            </h2> */}
           {steps.map((i, idx) => {
             return (
               <h2
@@ -62,16 +53,7 @@ export default function Steps() {
           })}
         </div>
         <div className='relative w-full mt-6 overflow-hidden md:mt-1 md:w-9/12'>
-          <div
-            key={'transition-key'}
-            className='w-full space-y-6'
-            // x-transition:enter='top-0 left-0 w-full h-full absolute transition ease-out duration-300'
-            // x-transition:enter-start='opacity-0 transform translate-y-full'
-            // x-transition:enter-end='opacity-100 transform translate-y-0'
-            // x-transition:leave='transition ease-out duration-300'
-            // x-transition:leave-start='opacity-100 transform translate-y-0'
-            // x-transition:leave-end='opacity-0 transform -translate-y-full'
-          >
+          <div key={'transition-key'} className='w-full space-y-6'>
             <h3 className='text-2xl font-bold leading-7'>{step.subtitle}</h3>
             <div className='sm:py-10 font-normal leading-none text-gray-700 md:text-lg'>
               <div
