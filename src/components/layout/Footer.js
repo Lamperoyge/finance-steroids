@@ -2,7 +2,7 @@ import Link from 'next/link';
 const config = [
   {
     title: 'Home',
-    link: '#',
+    link: '/',
   },
   {
     title: 'Features',
@@ -11,6 +11,10 @@ const config = [
   {
     title: 'Pricing',
     link: '/#pricing',
+  },
+  {
+    title: 'Blog',
+    link: '/blog',
   },
 ];
 

@@ -39,7 +39,14 @@ function MyApp({ Component, pageProps }) {
     }
   }, []);
 
-  const noLayoutPages = ['/', '/plans', '/sign-in', '/sign-up'];
+  const noLayoutPages = [
+    '/',
+    '/plans',
+    '/sign-in',
+    '/sign-up',
+    '/blog',
+    '/blog/[...post]',
+  ];
   const Element = () => {
     if (noLayoutPages.includes(router.pathname)) {
       return <Component {...pageProps} />;
