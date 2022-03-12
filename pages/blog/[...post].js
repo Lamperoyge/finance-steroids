@@ -23,6 +23,25 @@ export default function PostPage({ post }) {
     <>
       <Head>
         <title>{post.title}</title>
+        <meta
+          property='og:url'
+          content={`https://www.floordle.app/blog/${post.slug}`}
+        />
+        <meta property='og:type' content='website' />
+        <meta property='og:title' content='Floordle - NFT Analytics' />
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta property='twitter:domain' content='https://floordle.app/' />
+        <meta
+          property='twitter:url'
+          content={`https://www.floordle.app/blog/${post.slug}`}
+        />
+        <meta name='twitter:title' content={post.title} />
+        <meta name='twitter:description' content={post.description} />
+        <meta
+          name='twitter:image'
+          content={'https:' + post.heroImage.fields.file.url}
+        />
+
         {post.description.trim() !== '' && (
           <>
             <meta
