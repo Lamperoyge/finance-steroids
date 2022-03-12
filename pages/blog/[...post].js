@@ -24,12 +24,19 @@ export default function PostPage({ post }) {
       <Head>
         <title>{post.title}</title>
         {post.description.trim() !== '' && (
-          <meta
-            name='description'
-            content={post.description}
-            key='description'
-          />
+          <>
+            <meta
+              name='description'
+              content={post.description}
+              key='description'
+            />
+            <meta property='og:description' content={post.description} />
+            <meta name='twitter:description' content={post.description} />
+          </>
         )}
+        <meta property='og:image' content={post.heroImage.fields.file.url} />
+        <meta name='twitter:image' content={post.heroImage.fields.file.url} />
+        <meta name='image' content={post.heroImage.fields.file.url} />
 
         {post.keywords && post.keywords.length > 0 && (
           <meta name='keywords' content={keywords.join(',')} />
