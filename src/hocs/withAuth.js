@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Spinner from 'components/ui/Spinner';
 import useUserRole from 'hooks/useUserRole';
 
-const whitelistedPages = ['/sign-up', '/sign-in'];
+const whitelistedPages = ['/sign-up', '/sign-in', '/blog', '/blog/[...post]'];
 
 export default function withAuth(Component) {
   function WrappedComponent(props) {

@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const setNullUser = () => {
     setUser(null);
+    setFirestoreUser(null);
     setIsLoading(false);
   };
   useEffect(() => {
