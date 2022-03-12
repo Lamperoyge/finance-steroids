@@ -3,9 +3,9 @@ import { createClient } from 'contentful';
 const space = process.env.CONTENTFUL_SPACE_ID;
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
 
+consoel.log(process.env.CONTENTFUL_ACCESS_TOKEN);
+console.log(process.env);
 const client = createClient({ space, accessToken });
-
-const previewClient = createClient({ space, accessToken });
 
 export async function fetchEntries() {
   const entries = await client.getEntries({ content_type: 'blogPost' });
