@@ -6,11 +6,16 @@ const Layout = dynamic(() => import('components/layout'));
 const Post = dynamic(() => import('components/blog/Post'));
 import Link from 'next/link';
 import { serialize } from 'next-mdx-remote/serialize';
+import { useEffect } from 'react';
 
 export default function PostPage({ post }) {
+  useEffect(() => {
+    if (!post) {
+      router.push('/blog');
+    }
+  }, []);
   const router = useRouter();
   if (!post) {
-    router.push('/blog');
     return null;
   }
 
