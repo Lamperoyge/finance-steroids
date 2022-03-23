@@ -56,7 +56,7 @@ export default function AlertsPage() {
             {alerts.map((alert, idx) => {
               return (
                 <tr key={idx} className='text-sm text-gray-500'>
-                  <td className='py-4'>{alert.slug || 'Doodles'}</td>
+                  <td className='py-4'>{alert.name || 'Doodles'}</td>
 
                   <td className='py-4'>
                     {typesMap[alert.alertType] || 'Alert type'}

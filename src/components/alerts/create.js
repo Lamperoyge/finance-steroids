@@ -49,12 +49,12 @@ export default function CreateAlert({
 
     if (target !== NaN && collection) {
       addAlert(
-        { ...values, target: target, slug: collection.name },
+        { ...values, target: target, slug: collection.slug },
         firestoreUser
       );
       addUserAlert({
         ...values,
-        slug: collection.name,
+        slug: collection.slug,
         target: target,
         active: true,
       });
