@@ -4,6 +4,7 @@ import {
   ADD_USER_WALLETS,
   ADD_USER_WATCHLIST,
   ADD_ALERT,
+  TOGGLE_TELEGRAM_NOTIFICATIONS,
 } from './firestore.types';
 import { db } from 'utils/firebase-config';
 import {
@@ -25,10 +26,11 @@ import {
   where,
   Timestamp,
   serverTimestamp,
+  deleteDoc,
+  onSnapshot,
 } from 'firebase/firestore';
 import { useAuth } from 'context/AuthContext';
 import { getNftBalance } from 'services/wallet';
-
 const INITIAL_STATE = {
   wallets: [],
   watchlist: [],
@@ -52,6 +54,11 @@ const reducer = function (state, { type, payload }) {
         ...state,
         alerts: payload,
       };
+    case TOGGLE_TELEGRAM_NOTIFICATIONS:
+      return {
+        ...state,
+        isTelegramConnected: payload,
+      };
     default:
       return { ...state };
   }
@@ -72,6 +79,20 @@ export const FirestoreProvider = ({ children }) => {
     }
     // if (unsub && typeof unsub === 'function') return () => unsub();
   }, [firestoreUser]);
+
+  const fetchTelegramChat = async () => {
+    const ref = doc(db, 'telegram-chats', firestoreUser.id);
+    try {
+      const doc = await getDoc(ref);
+      if (doc.exists()) {
+        dispatch({ type: TOGGLE_TELEGRAM_NOTIFICATIONS, payload: true });
+      } else {
+        dispatch({ type: TOGGLE_TELEGRAM_NOTIFICATIONS, payload: false });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const deleteWallet = async (wallet) => {
     if (firestoreUser.id && wallet.publicKey) {
@@ -188,6 +209,23 @@ export const FirestoreProvider = ({ children }) => {
     }
   };
 
+  const listenForTelegramChanges = async () => {
+    const unsub = onSnapshot(
+      doc(db, 'telegram-chats', firestoreUser.id),
+      (doc) => {
+        const data = doc.data();
+        if (data && data.chatId) {
+          dispatch({ type: TOGGLE_TELEGRAM_NOTIFICATIONS, payload: true });
+        }
+      }
+    );
+  };
+
+  const unlinkTelegram = async () => {
+    await deleteDoc(doc(db, 'telegram-chats', firestoreUser.id));
+    dispatch({ type: TOGGLE_TELEGRAM_NOTIFICATIONS, payload: false });
+  };
+
   return (
     <FirestoreContext.Provider
       value={{
@@ -200,6 +238,10 @@ export const FirestoreProvider = ({ children }) => {
         addUserAlert: addAlert,
         deleteUserAlert,
         deleteWallet,
+        fetchTelegramChat,
+        isTelegramConnected: state.isTelegramConnected,
+        unlinkTelegram,
+        listenForTelegramChanges,
       }}
     >
       {children}

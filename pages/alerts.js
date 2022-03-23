@@ -1,9 +1,10 @@
 import CreateAlert from 'components/alerts/create';
 import { useFirestore } from 'context/FirestoreContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { deleteAlert } from 'services/firestore';
-
+import { useEffect } from 'react';
+import { useAuth } from 'context/AuthContext';
 const typesMap = {
   market_cap: 'Market Cap',
   floor_price: 'Floor Price',
@@ -23,15 +24,88 @@ const frequencyMap = {
   daily: 'Daily',
   everytime: 'Everytime target is hit',
 };
+
+const LinkTelegram = ({
+  isConnected,
+  userId,
+  unlinkTelegram,
+  listenForTelegramChanges,
+}) => {
+  if (isConnected) {
+    return (
+      <span className='text-gray-200'>
+        You will receive the alerts by Email and Telegram.
+        <span
+          onClick={unlinkTelegram}
+          className='block cursor-pointer text-indigo-400 hover:text-indigo-500 underline'
+        >
+          {' '}
+          Click here to unlink Telegram
+        </span>
+      </span>
+    );
+  } else {
+    return (
+      <span className='text-gray-100'>
+        You will receive alerts by email.{' '}
+        <a
+          target='__blank'
+          onClick={listenForTelegramChanges}
+          className='underline text-indigo-400 hover:text-indigo-500'
+          href={`https://t.me/FloordleBot?start=${userId}`}
+        >
+          Link your Telegram account
+        </a>{' '}
+        in order to receive alerts on Telegram
+      </span>
+    );
+  }
+};
+
 export default function AlertsPage() {
-  const { alerts, deleteUserAlert } = useFirestore();
+  const {
+    alerts,
+    deleteUserAlert,
+    fetchTelegramChat,
+    isTelegramConnected,
+    unlinkTelegram,
+    listenForTelegramChanges,
+  } = useFirestore();
+  const { firestoreUser } = useAuth();
   const handleDelete = (id) => {
     deleteAlert(id);
     deleteUserAlert(id);
   };
+
+  const isTelegramConnectionLoading =
+    typeof isTelegramConnected === 'undefined';
+
+  useEffect(() => {
+    fetchTelegramChat();
+  }, []);
+
   return (
     <div className='w-full'>
       <div className='w-full'>
+        <div className='text-gray-100'>
+          {isTelegramConnectionLoading ? (
+            <span className='text-gray-400'>
+              Telegram:{' '}
+              <FontAwesomeIcon
+                className='fa-spin text-indigo-400'
+                style={{ fontSize: '2vh' }}
+                icon={faCircleNotch}
+              />
+            </span>
+          ) : (
+            <LinkTelegram
+              isConnected={isTelegramConnected}
+              userId={firestoreUser.id}
+              unlinkTelegram={unlinkTelegram}
+              listenForTelegramChanges={listenForTelegramChanges}
+            />
+          )}
+        </div>
         <CreateAlert />
       </div>
       <div className='p-6 bg-gray-900 rounded-lg'>

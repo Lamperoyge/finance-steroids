@@ -155,7 +155,7 @@ export default function CreateAlert({
 
   const formWidth = defaultCollection ? 'w-full' : 'w-1/2';
   return (
-    <div className={`w-full ${!isFormOpen ? formStyles : ''}`}>
+    <div className={`py-4 mt-4 w-full ${!isFormOpen ? formStyles : ''}`}>
       {isFormOpen && (
         <Formik
           validationSchema={validationSchema}
