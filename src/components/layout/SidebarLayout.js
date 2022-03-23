@@ -17,12 +17,23 @@ import { useRouter } from 'next/router';
 import { useAuth } from 'context/AuthContext';
 
 const menus = [
-  { name: 'Dashboard', icon: faChartBar, link: '/home' },
-  { name: 'Watchlist', icon: faRectangleList, link: '/watchlist' },
-  { name: 'Alerts', icon: faBell, link: '/alerts' },
-  { name: 'Plans', icon: faCoins, link: '/plans' },
-  { name: 'Wallets', icon: faRotate, link: '/wallets' },
-  { name: 'Logout', icon: faXmark, action: 'logout' },
+  {
+    name: 'Dashboard',
+    id: 'dashboard-sidebar',
+    icon: faChartBar,
+    link: '/home',
+  },
+  {
+    name: 'Watchlist',
+    id: 'watchlist-sidebar',
+    icon: faRectangleList,
+    link: '/watchlist',
+  },
+
+  { name: 'Alerts', id: 'alerts-sidebar', icon: faBell, link: '/alerts' },
+  { name: 'Plans', id: 'plans-sidebar', icon: faCoins, link: '/plans' },
+  { name: 'Wallets', id: 'wallets-sidebar', icon: faRotate, link: '/wallets' },
+  { name: 'Logout', id: 'logout-sidebar', icon: faXmark, action: 'logout' },
 ];
 
 const mobileCheck = function () {
@@ -60,14 +71,15 @@ function Sidebar() {
     <div
       className={`flex flex-col gap-y-4 items-center py-8 bg-gray-900 ${width}`}
     >
-      <button className='p-2 bg-opacity-20 rounded-xl bg-primary'>
-        <img className='w-12' src={'/favicon.png'} />
+      <button type='button' className='p-2 bg-opacity-20 rounded-xl bg-primary'>
+        <img id='logo' className='w-12' src={'/favicon.png'} />
       </button>
       <div className='flex flex-col gap-y-4 items-end self-end w-full'>
         {menus.map((menu, idx) => {
           return (
             <div
               key={idx}
+              id={menu.id}
               className={`w-full ${
                 activeRoute === menu.link
                   ? 'bg-gray-900 rounded-l-xl relative before:absolute before:w-4 before:h-8 before:-top-8 before:rounded-br-xl before:right-0 before:shadow-inverse-top  after:absolute after:w-4 after:h-8 after:-bottom-8 after:rounded-tr-xl after:right-0 after:shadow-inverse-bottom'

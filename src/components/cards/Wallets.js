@@ -23,7 +23,10 @@ export default function Wallets() {
   };
 
   return (
-    <div className='flex flex-col p-6 w-full m-2 sm:m-0 sm:w-auto bg-gray-900 rounded-lg gap-y-6'>
+    <div
+      id='wallets-card'
+      className='flex flex-col p-6 w-full m-2 sm:m-0 sm:w-auto bg-gray-900 rounded-lg gap-y-6'
+    >
       <ConnectWalletModal
         callback={walletCallback}
         isOpen={openModal}

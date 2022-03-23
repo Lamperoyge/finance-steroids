@@ -5,7 +5,7 @@ export default function StatsCard() {
   const { watchlist } = useFirestore();
 
   return (
-    <>
+    <div id='home-stats-card'>
       <h1 className='text-3xl font-semibold leading-loose text-white'>Stats</h1>
       <div className='flex gap-6 flex-col sm:flex-row'>
         {!watchlist.length && (
@@ -71,6 +71,6 @@ export default function StatsCard() {
           </a>
         </Link>
       </div>
-    </>
+    </div>
   );
 }
