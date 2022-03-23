@@ -49,7 +49,13 @@ export default function CreateAlert({
 
     if (target !== NaN && collection) {
       addAlert(
-        { ...values, target: target, slug: collection.name },
+        {
+          ...values,
+          target: target,
+          slug: collection.name,
+          token_address: collection.token_address,
+          openSea: `https://opensea.io/collection/${collection.slug}`,
+        },
         firestoreUser
       );
       addUserAlert({
@@ -57,6 +63,8 @@ export default function CreateAlert({
         slug: collection.name,
         target: target,
         active: true,
+        token_address: collection.token_address,
+        openSea: `https://opensea.io/collection/${collection.slug}`,
       });
       setCollection(null);
       setFormOpen(false);
