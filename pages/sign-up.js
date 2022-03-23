@@ -63,7 +63,7 @@ const schema = Yup.object({
 });
 
 function SignUpPage() {
-  const { signUp, logout, isAuthenticated } = useAuth();
+  const { signUp } = useAuth();
   const handleAuth = (values) => {
     signUp(values);
   };

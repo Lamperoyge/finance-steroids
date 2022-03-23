@@ -1,6 +1,10 @@
 import { TourProvider } from '@reactour/tour';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import Link from 'next/link';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from 'utils/firebase-config';
+import { useAuth } from 'context/AuthContext';
+
 const Close = ({ onClick }) => {
   return (
     <button
@@ -27,6 +31,9 @@ const Button = ({ onClick, title }) => {
 const steps = [
   {
     selector: '#dashboard-sidebar',
+    mutationObservables: ['#dashboard-sidebar'],
+    resizeObservables: ['#dashboard-sidebar'],
+    position: 'right',
     content: ({ setCurrentStep, setIsOpen }) => {
       return (
         <div>
@@ -53,7 +60,6 @@ const steps = [
         </div>
       );
     },
-    position: 'right',
   },
   {
     selector: '#wallets-card',
@@ -111,13 +117,24 @@ const steps = [
 
 export default function OnboardingTour({ children }) {
   const disableBody = (target) => disableBodyScroll(target);
-  const enableBody = (target) => enableBodyScroll(target);
+  const { firestoreUser, setFirestoreUser } = useAuth();
+  const beforeClose = async (target) => {
+    const userDocRef = doc(db, 'users', firestoreUser.id);
+    try {
+      await updateDoc(userDocRef, { hasFinishedOnboarding: true });
+      setFirestoreUser({ ...firestoreUser, hasFinishedOnboarding: true });
+    } catch (error) {
+      console.log('error');
+      alert('Woops! Something went wrong updating tour data');
+    }
+    enableBodyScroll(target);
+  };
 
   return (
     <>
       <TourProvider
         afterOpen={disableBody}
-        beforeClose={enableBody}
+        beforeClose={beforeClose}
         showCloseButton={true}
         disableInteraction={true}
         onClickMask={() => {}}

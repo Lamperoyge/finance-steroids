@@ -1,12 +1,11 @@
 import { auth, db } from 'utils/firebase-config';
-
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
 import { collection, setDoc, doc, getDoc } from 'firebase/firestore';
-
+import axios from 'axios';
 import React, { createContext, useState, useContext, useEffect } from 'react';
 const AuthContext = createContext({});
 
@@ -60,6 +59,11 @@ export const AuthProvider = ({ children }) => {
         email,
         name,
       });
+      try {
+        await axios.post('/api/send-mail', { email: email });
+      } catch (error) {
+        console.log('error adding to mail list');
+      }
     } catch (error) {
       setIsLoading(false);
       if (error.code === 'auth/user-not-found') {
@@ -89,7 +93,6 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {}
   };
 
-  // logout();
   return (
     <AuthContext.Provider
       value={{
@@ -101,6 +104,7 @@ export const AuthProvider = ({ children }) => {
         firestoreUser,
         errors,
         logout,
+        setFirestoreUser,
       }}
     >
       {children}
