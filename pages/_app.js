@@ -14,6 +14,7 @@ const FirestoreProvider = dynamic(() =>
   import('context/FirestoreContext').then((mod) => mod.FirestoreProvider)
 );
 const SidebarLayout = dynamic(() => import('components/layout/SidebarLayout'));
+const OnboardingTour = dynamic(() => import('components/tour'));
 import { useRouter } from 'next/router';
 import { getDefaultProvider } from 'ethers';
 import { NftProvider } from 'use-nft';
@@ -51,11 +52,13 @@ function MyApp({ Component, pageProps }) {
       return <Component {...pageProps} />;
     }
     return (
-      <SidebarLayout>
-        <NftProvider fetcher={['ethers', ethersConfig]}>
-          <Component {...pageProps} />
-        </NftProvider>
-      </SidebarLayout>
+      <OnboardingTour>
+        <SidebarLayout>
+          <NftProvider fetcher={['ethers', ethersConfig]}>
+            <Component {...pageProps} />
+          </NftProvider>
+        </SidebarLayout>
+      </OnboardingTour>
     );
   };
   return (
